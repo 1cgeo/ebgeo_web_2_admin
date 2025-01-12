@@ -1,97 +1,56 @@
-// vite.config.js
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
-import path from 'path'
 import viteCompression from 'vite-plugin-compression'
+import { fileURLToPath } from 'url'
+import path from 'path'
 
-export default defineConfig({
-  base: '/admin/',
-  plugins: [
-    react({
-      jsxImportSource: '@emotion/react',
-      babel: {
-        plugins: ['@emotion/babel-plugin']
-      }
-    }),
-    viteCompression({
-      verbose: true,
-      disable: false,
-      threshold: 1024,
-      algorithm: 'gzip',
-      ext: '.gz',
-      filter: (file) => {
-        return file.endsWith('.json') || 
-               file.endsWith('.js') || 
-               file.endsWith('.css')
-      }
-    })
-  ],
-  build: {
-    rollupOptions: {
-      input: {
-        main: path.resolve(__dirname, 'index.html')
-      },
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('@emotion') || id.includes('@mui')) {
-              return 'vendor-core'
-            }
-            if (id.includes('recharts')) {
-              return 'vendor-charts'
-            }
-            if (id.includes('lodash')) {
-              return 'vendor-utils'
-            }
-            return 'vendor-misc'
-          }
-        
-          if (id.includes('/src/components/')) {
-            return 'app-components'
-          }
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), '')
+  
+  return {
+    plugins: [
+      react({
+        jsxImportSource: '@emotion/react',
+        babel: {
+          plugins: ['@emotion/babel-plugin']
+        }
+      }),
+      viteCompression()
+    ],
+    server: {
+      port: 3001,
+      proxy: {
+        '/api': {
+          target: env.VITE_API_URL || 'http://localhost:3000',
+          changeOrigin: true
         }
       }
     },
-    target: 'esnext',
-    minify: 'esbuild',
-    cssCodeSplit: true,
-    chunkSizeWarningLimit: 400,
-    sourcemap: true,
-    assetsInlineLimit: 4096,
-    emptyOutDir: true,
-  },
-  resolve: {
-    alias: {
-      '@': path.resolve(__dirname, './src')
-    }
-  },
-  optimizeDeps: {
-    include: [
-      'react',
-      'react-dom',
-      '@mui/material',
-      '@mui/icons-material',
-      'recharts',
-      'lodash',
-      '@emotion/react',
-      '@emotion/styled',
-      '@emotion/cache',
-      '@emotion/utils',
-      '@emotion/weak-memoize',
-      '@emotion/memoize',
-      '@emotion/sheet',
-      '@emotion/serialize',
-      'hoist-non-react-statics'
-    ],
-    esbuildOptions: {
-      mainFields: ['module', 'main'],
-      resolveExtensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-      loader: {
-        '.js': 'jsx'
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'vendor-core': ['react', 'react-dom', 'react-router-dom'],
+            'vendor-mui': [
+              '@mui/material',
+              '@mui/icons-material', 
+              '@mui/x-data-grid',
+              '@mui/x-date-pickers'
+            ],
+            'vendor-utils': ['axios', 'swr', 'lodash', 'date-fns'],
+            'vendor-charts': ['recharts']
+          }
+        }
+      },
+      sourcemap: true,
+      chunkSizeWarningLimit: 1000
+    },
+    resolve: {
+      alias: {
+        '@': path.resolve(__dirname, './src')
       }
     }
-  },
-  esbuild: {
-    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   }
 })
