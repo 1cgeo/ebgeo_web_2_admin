@@ -24,7 +24,8 @@ export default defineConfig(({ mode }) => {
       proxy: {
         '/api': {
           target: env.VITE_API_URL || 'http://localhost:3000',
-          changeOrigin: true
+          changeOrigin: true,
+          secure: false // Adicionar para desenvolvimento com HTTPS
         }
       }
     },
@@ -37,15 +38,19 @@ export default defineConfig(({ mode }) => {
               '@mui/material',
               '@mui/icons-material', 
               '@mui/x-data-grid',
-              '@mui/x-date-pickers'
+              '@mui/x-date-pickers',
+              '@emotion/react',
+              '@emotion/styled'
             ],
-            'vendor-utils': ['axios', 'swr', 'lodash', 'date-fns'],
+            'vendor-utils': ['axios', 'lodash', 'date-fns'], // Removi SWR pois não estamos usando
             'vendor-charts': ['recharts']
           }
         }
       },
-      sourcemap: true,
-      chunkSizeWarningLimit: 1000
+      sourcemap: mode === 'development', // Sourcemap apenas em desenvolvimento
+      chunkSizeWarningLimit: 1000,
+      target: 'esnext',
+      minify: 'esbuild'
     },
     resolve: {
       alias: {
