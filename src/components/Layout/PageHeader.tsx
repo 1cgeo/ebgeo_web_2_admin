@@ -3,12 +3,13 @@ import { Box, Typography, Breadcrumbs, Link } from '@mui/material';
 import { Link as RouterLink } from 'react-router-dom';
 import { useGlobal } from '@/context/GlobalContext';
 
-interface PageHeaderProps {
+export interface PageHeaderProps {
   title: string;
+  subtitle?: string;
   actions?: React.ReactNode;
 }
 
-export const PageHeader: React.FC<PageHeaderProps> = ({ title, actions }) => {
+export const PageHeader: React.FC<PageHeaderProps> = ({ title, subtitle, actions }) => {
   const { state } = useGlobal();
 
   return (
@@ -39,9 +40,16 @@ export const PageHeader: React.FC<PageHeaderProps> = ({ title, actions }) => {
         justifyContent: 'space-between',
         alignItems: 'center'
       }}>
-        <Typography variant="h4" component="h1">
-          {title}
-        </Typography>
+        <Box>
+          <Typography variant="h4" component="h1">
+            {title}
+          </Typography>
+          {subtitle && (
+            <Typography variant="subtitle1" color="text.secondary">
+              {subtitle}
+            </Typography>
+          )}
+        </Box>
         {actions && (
           <Box sx={{ display: 'flex', gap: 1 }}>
             {actions}

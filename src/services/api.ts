@@ -1,8 +1,16 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import { NetworkError } from './auth';
+
+export class CSPError extends Error {
+  constructor(directive: string) {
+    super(`CSP violation: ${directive}`);
+    this.name = 'CSPError';
+  }
+}
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 10000
+  timeout: 15000
 });
 
 // Request interceptor
@@ -21,14 +29,19 @@ api.interceptors.request.use(
 
 // Response interceptor
 api.interceptors.response.use(
-  (response) => response,
+  response => response,
   async (error: AxiosError) => {
     if (error.response?.status === 401) {
-      // Limpa dados de autenticação e redireciona para login
       localStorage.removeItem('token');
-      localStorage.removeItem('user');
       window.location.href = '/login';
     }
     return Promise.reject(error);
   }
 );
+
+// CSP violation handler
+window.addEventListener('securitypolicyviolation', (e) => {
+  throw new CSPError(e.violatedDirective);
+});
+
+export { NetworkError };

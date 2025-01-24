@@ -1,37 +1,43 @@
 import { useState, useCallback } from 'react';
 
-interface UseFormOptions<T extends Record<string, unknown>> {
-  initialValues: T;
-  onSubmit: (values: T) => Promise<void>;
-  validate?: (values: T) => Record<string, string>;
+export interface FormState<T> {
+  values: T;
+  errors: Partial<T>;
+  touched: Record<keyof T, boolean>;
+  isSubmitting: boolean;
 }
 
-type FormEvent = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-type BlurEvent = React.FocusEvent<HTMLInputElement | HTMLTextAreaElement>;
+interface UseFormOptions<T> {
+  initialValues: T;
+  onSubmit: (values: T) => Promise<void>;
+  validate?: (values: T) => Partial<T>;
+}
 
-export function useForm<T extends Record<string, unknown>>({
+export function useForm<T extends Record<string, string>>({
   initialValues,
   onSubmit,
   validate
 }: UseFormOptions<T>) {
-  const [values, setValues] = useState<T>(initialValues);
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [touched, setTouched] = useState<Record<string, boolean>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [state, setState] = useState<FormState<T>>({
+    values: initialValues,
+    errors: {},
+    touched: Object.keys(initialValues).reduce((acc, key) => {
+      acc[key as keyof T] = false;
+      return acc;
+    }, {} as Record<keyof T, boolean>),
+    isSubmitting: false
+  });
 
-  const handleChange = useCallback((e: FormEvent) => {
-    const { name, value } = e.target;
-    setValues(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  const setErrors = useCallback((errors: Partial<T>) => {
+    setState(prev => ({ ...prev, errors }));
   }, []);
 
-  const handleBlur = useCallback((e: BlurEvent) => {
-    const { name } = e.target;
-    setTouched(prev => ({
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setState(prev => ({
       ...prev,
-      [name]: true
+      values: { ...prev.values, [name]: value },
+      touched: { ...prev.touched, [name]: true }
     }));
   }, []);
 
@@ -39,44 +45,25 @@ export function useForm<T extends Record<string, unknown>>({
     e.preventDefault();
     
     if (validate) {
-      const validationErrors = validate(values);
-      setErrors(validationErrors);
-      
+      const validationErrors = validate(state.values);
       if (Object.keys(validationErrors).length > 0) {
+        setState(prev => ({ ...prev, errors: validationErrors }));
         return;
       }
     }
 
-    setIsSubmitting(true);
+    setState(prev => ({ ...prev, isSubmitting: true, errors: {} }));
     try {
-      await onSubmit(values);
+      await onSubmit(state.values);
     } finally {
-      setIsSubmitting(false);
+      setState(prev => ({ ...prev, isSubmitting: false }));
     }
-  }, [values, validate, onSubmit]);
-
-  const setFieldValue = useCallback((name: string, value: unknown) => {
-    setValues(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  }, []);
-
-  const resetForm = useCallback(() => {
-    setValues(initialValues);
-    setErrors({});
-    setTouched({});
-  }, [initialValues]);
+  }, [state.values, validate, onSubmit]);
 
   return {
-    values,
-    errors,
-    touched,
-    isSubmitting,
+    ...state,
+    setErrors,
     handleChange,
-    handleBlur,
-    handleSubmit,
-    setFieldValue,
-    resetForm
+    handleSubmit
   };
 }
