@@ -22,7 +22,7 @@ export type NetworkErrorCode =
 export const authService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const response = await api.post<LoginResponse>('/auth/login', credentials, {
+      const response = await api.post<LoginResponse>('/api/auth/login', credentials, {
         timeout: TIMEOUT,
       });
       localStorage.setItem('token', response.data.token);
@@ -55,7 +55,7 @@ export const authService = {
 
   async logout(): Promise<void> {
     try {
-      await api.post('/auth/logout');
+      await api.post('/api/auth/logout');
     } finally {
       localStorage.removeItem('token');
     }

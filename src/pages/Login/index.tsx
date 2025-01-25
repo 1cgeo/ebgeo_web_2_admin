@@ -16,17 +16,31 @@ const LoginPage = () => {
   return (
     <Box
       sx={{
-        position: 'relative',
         minHeight: '100vh',
+        width: '100vw',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        p: isMobile ? 2 : 4,
-        overflow: 'hidden',
+        position: 'relative',
+        padding: isMobile ? 2 : 4,
+        overflow: 'hidden'
       }}
     >
-      <BackgroundSlider />
-      <LoginForm />
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          zIndex: 0
+        }}
+      >
+        <BackgroundSlider />
+      </Box>
+      <Box sx={{ position: 'relative', zIndex: 1 }}>
+        <LoginForm />
+      </Box>
     </Box>
   );
 };

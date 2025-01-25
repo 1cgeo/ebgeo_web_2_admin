@@ -9,21 +9,21 @@ interface GroupListParams {
 
 export const groupsService = {
   async list(params: GroupListParams): Promise<GroupList> {
-    const { data } = await api.get('/groups', { params });
+    const { data } = await api.get('/api/groups', { params });
     return data;
   },
 
   async create(groupData: CreateGroupDTO): Promise<GroupDetails> {
-    const { data } = await api.post('/groups', groupData);
+    const { data } = await api.post('/api/groups', groupData);
     return data;
   },
 
   async update(id: string, groupData: UpdateGroupDTO): Promise<GroupDetails> {
-    const { data } = await api.put(`/groups/${id}`, groupData);
+    const { data } = await api.put(`/api/groups/${id}`, groupData);
     return data;
   },
 
   async delete(id: string): Promise<void> {
-    await api.delete(`/groups/${id}`);
+    await api.delete(`/api/groups/${id}`);
   }
 };

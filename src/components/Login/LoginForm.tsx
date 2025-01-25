@@ -54,7 +54,6 @@ export const LoginForm = () => {
     errors,
     isSubmitting,
     handleChange,
-    handleSubmit,
     setErrors
   } = useForm<LoginFormFields>({
     initialValues: {
@@ -62,17 +61,18 @@ export const LoginForm = () => {
       password: '',
       submit: ''
     },
-    onSubmit: async (values) => {
+    onSubmit: async (formValues: LoginFormFields) => {
       buttonPressVibration();
+      setErrors({});
+      
       try {
         const response = await authService.login({
-          username: values.username,
-          password: values.password
+          username: formValues.username,
+          password: formValues.password
         });
         successVibration();
         login(response.user, response.token);
         setLoginSuccess(true);
-        // Delay navigation to allow animation to complete
         setTimeout(() => navigate('/dashboard'), 500);
       } catch (error) {
         errorVibration();
@@ -83,10 +83,10 @@ export const LoginForm = () => {
         } else {
           const axiosError = error as AxiosError<ApiErrorResponse>;
           
-          if (axiosError.response?.status === 429) {
+          if (axiosError.response?.status === 401) {
+            setErrors({ submit: 'Usuário ou senha inválidos' });
+          } else if (axiosError.response?.status === 429) {
             setErrors({ submit: errorMessages.RATE_LIMIT });
-          } else if (axiosError.response?.status === 503) {
-            setErrors({ submit: errorMessages.MAINTENANCE });
           } else if (axiosError.response?.data?.message) {
             setErrors({ submit: axiosError.response.data.message });
           } else {
@@ -109,22 +109,43 @@ export const LoginForm = () => {
     }
   });
 
-  const getInputStyles = () => ({
-    '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.3)' : undefined,
-      },
-      '&:hover fieldset': {
-        borderColor: isDarkMode ? 'rgba(255, 255, 255, 0.5)' : undefined,
-      },
-    },
-    '& .MuiInputLabel-root': {
-      color: isDarkMode ? 'rgba(255, 255, 255, 0.7)' : undefined,
-    },
-    '& .MuiInputBase-input': {
-      color: isDarkMode ? 'white' : undefined,
-    },
-  });
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    buttonPressVibration();
+    setErrors({});
+    
+    try {
+      const response = await authService.login({
+        username: values.username,
+        password: values.password
+      });
+      console.log(response)
+      successVibration();
+      login(response.user, response.token);
+      setLoginSuccess(true);
+      setTimeout(() => navigate('/dashboard'), 500);
+    } catch (error) {
+      console.log(error)
+      errorVibration();
+      if (error instanceof NetworkError) {
+        setErrors({ submit: errorMessages[error.code] });
+      } else if (error instanceof CSPError) {
+        setErrors({ submit: errorMessages.CSP });
+      } else {
+        const axiosError = error as AxiosError<ApiErrorResponse>;
+        
+        if (axiosError.response?.status === 401) {
+          setErrors({ submit: 'Usuário ou senha inválidos' });
+        } else if (axiosError.response?.status === 429) {
+          setErrors({ submit: errorMessages.RATE_LIMIT });
+        } else if (axiosError.response?.data?.message) {
+          setErrors({ submit: axiosError.response.data.message });
+        } else {
+          setErrors({ submit: errorMessages.DEFAULT });
+        }
+      }
+    }
+  };
 
   return (
     <PageTransition loading={loginSuccess}>
@@ -140,6 +161,11 @@ export const LoginForm = () => {
             ['opacity', 'transform', 'background-color'],
             { duration: theme.transitions.duration.standard }
           ),
+          boxShadow: _ => `0 0 20px rgba(0,0,0,0.3), 
+                              0 0 40px rgba(0,0,0,0.1), 
+                              0 0 80px rgba(0,0,0,0.1)`,
+          border: '1px solid rgba(255,255,255,0.1)',
+          borderRadius: 2
         }}
       >
         <CardContent sx={{ p: 3 }}>
@@ -148,7 +174,7 @@ export const LoginForm = () => {
               <Box sx={{ textAlign: 'center', mb: 4 }}>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mb: 3 }}>
                   <img
-                    src={isDarkMode ? "/images/logo-ebgeo-white.png" : "/images/logo-ebgeo.png"}
+                    src="/images/logo-ebgeo.png"
                     alt="EBGeo Logo"
                     style={{ height: 64, width: 'auto' }}
                   />
@@ -184,7 +210,7 @@ export const LoginForm = () => {
                   error={Boolean(errors.username)}
                   helperText={errors.username}
                   disabled={isSubmitting}
-                  sx={{ mb: 2, ...getInputStyles() }}
+                  sx={{ mb: 2 }}
                 />
 
                 <TextField
@@ -200,7 +226,7 @@ export const LoginForm = () => {
                   error={Boolean(errors.password)}
                   helperText={errors.password}
                   disabled={isSubmitting}
-                  sx={{ mb: 3, ...getInputStyles() }}
+                  sx={{ mb: 3 }}
                 />
 
                 <Button

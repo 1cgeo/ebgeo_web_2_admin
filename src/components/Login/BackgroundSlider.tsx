@@ -1,96 +1,66 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+
+import montanhas from '@/assets/images/satellite/montanhas.png';
+import rio from '@/assets/images/satellite/rio.png';
+import brasilia from '@/assets/images/satellite/brasilia.png';
+import santos from '@/assets/images/satellite/santos.png';
+import amazonia from '@/assets/images/satellite/amazonia.png';
+import luiz_eduardo from '@/assets/images/satellite/luiz_eduardo.png';
+import uruguaiana from '@/assets/images/satellite/uruguaiana.png';
 
 const SATELLITE_IMAGES = [
-  '/images/satellite/rio.jpg',
-  '/images/satellite/brasilia.jpg',
-  '/images/satellite/santos.jpg',
-  '/images/satellite/amazonia.jpg',
-  '/images/satellite/montanhas.jpg'
+  montanhas,
+  rio,
+  brasilia,
+  santos,
+  amazonia,
+  luiz_eduardo,
+  uruguaiana
 ];
 
-const TRANSITION_DURATION = 1000;
-const SLIDE_DURATION = 5000;
-
 export const BackgroundSlider = () => {
-  const theme = useTheme();
-  const [preloaded, setPreloaded] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [nextIndex, setNextIndex] = useState(1);
-  const [isTransitioning, setIsTransitioning] = useState(false);
-  const isDarkMode = theme.palette.mode === 'dark';
-
-  const preloadImages = useCallback(() => {
-    const loadPromises = SATELLITE_IMAGES.map(url => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = resolve;
-        img.onerror = reject;
-        img.src = url;
-      });
-    });
-
-    Promise.all(loadPromises)
-      .then(() => setPreloaded(true))
-      .catch(error => console.error('Error preloading images:', error));
-  }, []);
-
-  useEffect(() => {
-    preloadImages();
-  }, [preloadImages]);
-
-  useEffect(() => {
-    if (!preloaded) return;
-
-    const interval = setInterval(() => {
-      setIsTransitioning(true);
-      setTimeout(() => {
-        setCurrentIndex(nextIndex);
-        setNextIndex((nextIndex + 1) % SATELLITE_IMAGES.length);
-        setIsTransitioning(false);
-      }, TRANSITION_DURATION);
-    }, SLIDE_DURATION);
-
-    return () => clearInterval(interval);
-  }, [nextIndex, preloaded]);
-
-  if (!preloaded) return null;
+  const settings = {
+    dots: false,
+    fade: true,
+    infinite: true,
+    speed: 2000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 5000,
+    pauseOnHover: false,
+    arrows: false
+  };
 
   return (
-    <>
+    <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+      <Slider {...settings}>
+        {SATELLITE_IMAGES.map((image, index) => (
+          <Box key={index} sx={{ height: '100vh' }}>
+            <Box
+              sx={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: `url(${image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center'
+              }}
+            />
+          </Box>
+        ))}
+      </Slider>
+      
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${SATELLITE_IMAGES[currentIndex]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          transition: `opacity ${TRANSITION_DURATION}ms ease-in-out`,
-          opacity: isTransitioning ? 0 : 1,
+          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          zIndex: 2
         }}
       />
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          backgroundImage: `url(${SATELLITE_IMAGES[nextIndex]})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          transition: `opacity ${TRANSITION_DURATION}ms ease-in-out`,
-          opacity: isTransitioning ? 1 : 0,
-        }}
-      />
-      <Box
-        sx={{
-          position: 'absolute',
-          inset: 0,
-          bgcolor: isDarkMode ? 'rgba(0, 0, 0, 0.6)' : 'rgba(255, 255, 255, 0.4)',
-        }}
-      />
-    </>
+    </Box>
   );
 };
