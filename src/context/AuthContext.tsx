@@ -65,12 +65,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
-    if (state.token) {
-      api.defaults.headers.common['Authorization'] = `Bearer ${state.token}`;
-    } else {
-      delete api.defaults.headers.common['Authorization'];
-    }
-  }, [state.token]);
+    const initializeAuth = async () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        try {
+          api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+          const response = await api.get('/api/users/me');
+          if (response.data.role === 'admin') {
+            dispatch({ type: 'LOGIN', payload: { user: response.data, token } });
+          } else {
+            localStorage.removeItem('token');
+          }
+        } catch (error) {
+          localStorage.removeItem('token');
+        }
+      }
+    };
+
+    initializeAuth();
+  }, []);
 
   const login = (user: User, token: string) => {
     localStorage.setItem('token', token);
@@ -86,23 +99,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     dispatch({ type: 'SET_LOADING', payload: loading });
   };
 
-  // Setup response interceptor for 401 errors
-  useEffect(() => {
-    const interceptor = api.interceptors.response.use(
-      response => response,
-      error => {
-        if (error.response?.status === 401) {
-          logout();
-        }
-        return Promise.reject(error);
-      }
-    );
-
-    return () => {
-      api.interceptors.response.eject(interceptor);
-    };
-  }, []);
-
   return (
     <AuthContext.Provider value={{ ...state, login, logout, setLoading }}>
       {children}
@@ -112,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;

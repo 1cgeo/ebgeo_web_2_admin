@@ -23,18 +23,25 @@ import {
   ViewInAr as CatalogIcon,
   Map as ZoneIcon,
   Article as LogsIcon,
-  History as AuditIcon
+  History as AuditIcon,
+  Logout as LogoutIcon
 } from '@mui/icons-material';
+import { useAuth } from '@/context/AuthContext';
 
 const drawerWidth = 240;
 
 const DashboardLayout = () => {
   const theme = useTheme();
+  const { logout } = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+
+  const handleLogout = () => {
+    logout();
   };
 
   const menuItems = [
@@ -91,11 +98,11 @@ const DashboardLayout = () => {
       <List>
         {menuItems.map((item) => (
           <ListItem 
-          key={item.path} 
-          component={Link} 
-          to={item.path}
-          sx={{ cursor: 'pointer' }}
-        >
+            key={item.path} 
+            component={Link} 
+            to={item.path}
+            sx={{ cursor: 'pointer' }}
+          >
             <ListItemIcon>{item.icon}</ListItemIcon>
             <ListItemText primary={item.title} />
           </ListItem>
@@ -122,9 +129,16 @@ const DashboardLayout = () => {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
+          <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
             EBGeo Admin
           </Typography>
+          <IconButton
+            color="inherit"
+            onClick={handleLogout}
+            title="Sair"
+          >
+            <LogoutIcon />
+          </IconButton>
         </Toolbar>
       </AppBar>
 
