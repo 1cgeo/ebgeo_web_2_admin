@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, Paper, Typography, Skeleton } from '@mui/material';
-import { TrendingUp, TrendingDown } from '@mui/icons-material';
+import { Box, Paper, Typography } from '@mui/material';
 
-interface MetricCardProps {
+export interface MetricCardProps {
   title: string;
   value: string | number;
   subtitle?: string;
@@ -11,6 +10,7 @@ interface MetricCardProps {
     value: number;
     isPositive: boolean;
   };
+  severity?: 'success' | 'warning' | 'error' | 'info';
   loading?: boolean;
 }
 
@@ -20,56 +20,68 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   subtitle,
   icon,
   trend,
-  loading = false
+  severity
 }) => {
-  if (loading) {
-    return (
-      <Paper sx={{ p: 2 }}>
-        <Skeleton width="60%" height={24} />
-        <Skeleton width="100%" height={40} />
-        {subtitle && <Skeleton width="40%" height={20} />}
-      </Paper>
-    );
-  }
+  const getColor = () => {
+    if (!severity) return 'inherit';
+    switch (severity) {
+      case 'success': return 'success.main';
+      case 'warning': return 'warning.main';
+      case 'error': return 'error.main';
+      case 'info': return 'info.main';
+      default: return 'inherit';
+    }
+  };
 
   return (
-    <Paper sx={{ p: 2 }}>
+    <Paper 
+      sx={{ 
+        p: 2,
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
       <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
         {icon && (
-          <Box sx={{ mr: 1, color: 'primary.main' }}>
+          <Box sx={{ mr: 1, color: getColor() }}>
             {icon}
           </Box>
         )}
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography variant="subtitle1" color="text.secondary">
           {title}
         </Typography>
       </Box>
       
-      <Typography variant="h4" component="div" gutterBottom>
+      <Typography 
+        variant="h4" 
+        component="div" 
+        gutterBottom
+        sx={{ color: getColor() }}
+      >
         {value}
       </Typography>
       
-      {(subtitle || trend) && (
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {trend && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                color: trend.isPositive ? 'success.main' : 'error.main'
-              }}
-            >
-              {trend.isPositive ? <TrendingUp /> : <TrendingDown />}
-              <Typography variant="body2" sx={{ ml: 0.5 }}>
-                {trend.value}%
-              </Typography>
-            </Box>
-          )}
-          {subtitle && (
-            <Typography variant="body2" color="text.secondary">
-              {subtitle}
-            </Typography>
-          )}
+      {subtitle && (
+        <Typography variant="body2" color="text.secondary">
+          {subtitle}
+        </Typography>
+      )}
+
+      {trend && (
+        <Box 
+          sx={{ 
+            mt: 'auto', 
+            pt: 1,
+            color: trend.isPositive ? 'success.main' : 'error.main',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          {trend.isPositive ? '↑' : '↓'}
+          <Typography variant="body2" sx={{ ml: 0.5 }}>
+            {trend.value}%
+          </Typography>
         </Box>
       )}
     </Paper>

@@ -60,6 +60,25 @@ export interface SystemHealth {
       totalRequests24h: number;
     };
   }
+
+  export interface ServiceHealthCardProps {
+    status: SystemHealth['services']['database']['status'];
+    name: string;
+    icon: React.ReactNode;
+    lastCheck?: Date;
+  }
+  
+  export interface DatabaseConnectionsProps {
+    data: SystemMetrics['database']['connectionPool'];
+  }
+  
+  export interface ModelsDistributionProps {
+    data: SystemMetrics['usage']['totalModels'];
+  }
+  
+  export interface SystemResourcesProps {
+    data: SystemMetrics['system'];
+  }
   
   export interface LogQueryParams {
     startDate?: string;
