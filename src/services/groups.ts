@@ -1,15 +1,14 @@
 import { api } from './api';
-import { GroupList, GroupDetails, CreateGroupDTO, UpdateGroupDTO } from '@/types/groups';
-
-interface GroupListParams {
-  page?: number;
-  limit?: number;
-  search?: string;
-}
+import type { GroupList, GroupDetails, CreateGroupDTO, UpdateGroupDTO, GroupListParams } from '@/types/groups';
 
 export const groupsService = {
   async list(params: GroupListParams): Promise<GroupList> {
     const { data } = await api.get('/api/groups', { params });
+    return data;
+  },
+
+  async getDetails(id: string): Promise<GroupDetails> {
+    const { data } = await api.get(`/api/groups/${id}`);
     return data;
   },
 

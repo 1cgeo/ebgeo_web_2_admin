@@ -14,16 +14,16 @@ import {
 } from '@mui/material';
 import { EmptyState } from '@/components/Feedback/EmptyState';
 
-interface DataItem {
+export interface DataItem {
   id: string;
   [key: string]: unknown;
 }
 
-interface Column<T extends DataItem> {
+export interface Column<T extends DataItem> {
   id: keyof T;
   label: string;
   align?: 'left' | 'right' | 'center';
-  format?: (value: T[keyof T]) => React.ReactNode;
+  format?: (value: T[keyof T], row: T) => React.ReactNode;
   sortable?: boolean;
 }
 
@@ -91,9 +91,13 @@ export function DataTable<T extends DataItem>({
           }}
         />
       )}
-      
+
       <TableContainer>
-        <Table>
+        <Table sx={{
+          '& .MuiTableRow-root:hover': {
+            bgcolor: 'action.hover'
+          }
+        }}>
           <TableHead>
             <TableRow>
               {selectable && (
@@ -145,7 +149,7 @@ export function DataTable<T extends DataItem>({
                   const value = row[column.id];
                   return (
                     <TableCell key={String(column.id)} align={column.align}>
-                      {column.format ? column.format(value) : value as React.ReactNode}
+                      {column.format ? column.format(value, row) : value as React.ReactNode}
                     </TableCell>
                   );
                 })}
@@ -154,7 +158,7 @@ export function DataTable<T extends DataItem>({
           </TableBody>
         </Table>
       </TableContainer>
-      
+
       <TablePagination
         rowsPerPageOptions={[5, 10, 25]}
         component="div"

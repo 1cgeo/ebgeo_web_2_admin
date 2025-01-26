@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Card, CardContent, TextField, Button, Alert, Typography, useTheme, Fade } from '@mui/material';
 import { useAuth } from '@/context/AuthContext';
@@ -9,6 +10,7 @@ import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 import { LoadingDot } from '@/components/Animations/LoadingDot';
 import { PageTransition } from '@/components/Animations/PageTransition';
 import type { AxiosError } from 'axios';
+import { handleAuthError } from '@/services/api';
 
 type LoginFormFields = {
   username: string;
@@ -58,57 +60,57 @@ export const LoginForm = () => {
     }
   });
 
-      const validateForm = () => {
-      const errors: Partial<LoginFormFields> = {};
-      
-      if (!values.username) {
-        errors.username = 'Usuário é obrigatório';
-      } else if (values.username.length < 3) {
-        errors.username = 'Usuário deve ter no mínimo 3 caracteres';
-      } else if (values.username.length > 50) {
-        errors.username = 'Usuário deve ter no máximo 50 caracteres';
-      } else if (!/^[a-zA-Z0-9._]+$/.test(values.username)) {
-        errors.username = 'Usuário deve conter apenas letras, números, pontos e underlines';
-      } else if (values.username.trim() !== values.username) {
-        errors.username = 'Usuário não pode começar ou terminar com espaços';
-      }
+  const validateForm = () => {
+    const errors: Partial<LoginFormFields> = {};
 
-      if (!values.password) {
-        errors.password = 'Senha é obrigatória';
-      } else if (values.password.length < 6) {
-        errors.password = 'Senha deve ter no mínimo 6 caracteres';
-      } else if (values.password.length > 50) {
-        errors.password = 'Senha deve ter no máximo 50 caracteres';
-      }
+    if (!values.username) {
+      errors.username = 'Usuário é obrigatório';
+    } else if (values.username.length < 3) {
+      errors.username = 'Usuário deve ter no mínimo 3 caracteres';
+    } else if (values.username.length > 50) {
+      errors.username = 'Usuário deve ter no máximo 50 caracteres';
+    } else if (!/^[a-zA-Z0-9._]+$/.test(values.username)) {
+      errors.username = 'Usuário deve conter apenas letras, números, pontos e underlines';
+    } else if (values.username.trim() !== values.username) {
+      errors.username = 'Usuário não pode começar ou terminar com espaços';
+    }
 
-      return errors;
-    };
+    if (!values.password) {
+      errors.password = 'Senha é obrigatória';
+    } else if (values.password.length < 6) {
+      errors.password = 'Senha deve ter no mínimo 6 caracteres';
+    } else if (values.password.length > 50) {
+      errors.password = 'Senha deve ter no máximo 50 caracteres';
+    }
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      buttonPressVibration();
-      
-      const validationErrors = validateForm();
-      if (Object.keys(validationErrors).length > 0) {
-        setErrors(validationErrors);
-        errorVibration();
-        return;
-      }
-      
-      setErrors({});
-    
+    return errors;
+  };
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    buttonPressVibration();
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
+      errorVibration();
+      return;
+    }
+
+    setErrors({});
+
     try {
       const response = await authService.login({
         username: values.username,
         password: values.password
       });
-      
+
       if (response.user.role !== 'admin') {
         errorVibration();
         setErrors({ submit: 'Acesso restrito a administradores' });
         return;
       }
-      
+
       successVibration();
       login(response.user, response.token);
       setLoginSuccess(true);
@@ -121,7 +123,7 @@ export const LoginForm = () => {
         setErrors({ submit: errorMessages.CSP });
       } else {
         const axiosError = error as AxiosError<ApiErrorResponse>;
-        
+
         if (axiosError.response?.status === 401) {
           setErrors({ submit: errorMessages.AUTH });
         } else if (axiosError.response?.status === 429) {
@@ -134,14 +136,21 @@ export const LoginForm = () => {
       }
     }
   };
+  
+  useEffect(() => {
+    const errorMessage = handleAuthError(navigate);
+    if (errorMessage) {
+      setErrors({ submit: errorMessage });
+    }
+  }, [setErrors, navigate]);
 
   return (
     <PageTransition loading={loginSuccess}>
-      <Card 
-        sx={{ 
+      <Card
+        sx={{
           width: '100%',
           maxWidth: '400px',
-          backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.4)' : 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
           backdropFilter: 'blur(10px)',
           transform: loginSuccess ? 'scale(0.95) translateY(-20px)' : 'none',
           opacity: loginSuccess ? 0 : 1,
@@ -152,7 +161,11 @@ export const LoginForm = () => {
           boxShadow: _ => `0 0 20px rgba(0,0,0,0.3), 
           0 0 40px rgba(0,0,0,0.1), 
           0 0 80px rgba(0,0,0,0.1)`,
-          border: '1px solid rgba(0, 0, 0, 0.5)',
+          border: _ => `1px solid ${
+            isDarkMode 
+              ? 'rgba(255, 255, 255, 0.2)'
+              : 'rgba(0, 0, 0, 0.2)'
+          }`,
           borderRadius: 2
         }}
       >
@@ -223,7 +236,7 @@ export const LoginForm = () => {
                   variant="contained"
                   size="large"
                   disabled={isSubmitting}
-                  sx={{ 
+                  sx={{
                     py: 1.5,
                     position: 'relative',
                     '&:active': {

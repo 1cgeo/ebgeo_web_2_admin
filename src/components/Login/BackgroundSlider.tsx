@@ -30,7 +30,7 @@ export const BackgroundSlider = () => {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000,
+    autoplaySpeed: 8000,
     pauseOnHover: false,
     arrows: false
   };
@@ -57,7 +57,7 @@ export const BackgroundSlider = () => {
         sx={{
           position: 'absolute',
           inset: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.4)',
+          backgroundColor: 'rgba(0, 0, 0, 0.1)',
           zIndex: 2
         }}
       />

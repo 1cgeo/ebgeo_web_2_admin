@@ -32,34 +32,32 @@ api.interceptors.request.use(
   }
 );
 
-// Only handle token expiration, not login failures
 api.interceptors.response.use(
   response => response,
   async (error: AxiosError<ApiErrorResponse>) => {
     const isLoginRequest = error.config?.url?.includes('/auth/login');
     
     if (error.response?.status === 401 && !isLoginRequest) {
-      const errorMessage = error.response.data?.message;
-      if (errorMessage?.includes('expired') || errorMessage?.includes('invalid')) {
-        localStorage.removeItem('token');
-        window.location.href = '/login';
-      }
+      localStorage.removeItem('token');
+      window.location.href = '/login';
     }
 
     // Handle loss of admin privileges
     if (error.response?.status === 403) {
-      const errorMessage = error.response.data?.message;
-      if (errorMessage?.includes('admin') || errorMessage?.includes('permission')) {
-        localStorage.removeItem('token');
-        window.location.href = '/login?error=forbidden';
-      }
+      localStorage.removeItem('token');
+      window.location.href = '/login?error=forbidden';
+    }
+
+    if (error.response?.status === 429) {
+      localStorage.removeItem('token');
+      window.location.href = '/login?error=ratelimit';
     }
     
     return Promise.reject(error);
   }
 );
 
-export const handleForbiddenError = (navigate: (path: string) => void) => {
+export const handleAuthError = (navigate: (path: string) => void) => {
   const urlParams = new URLSearchParams(window.location.search);
   const error = urlParams.get('error');
   
@@ -67,6 +65,12 @@ export const handleForbiddenError = (navigate: (path: string) => void) => {
     navigate('/login');
     return 'Sua sessão expirou devido a alterações nas suas permissões.';
   }
+  
+  if (error === 'ratelimit') {
+    navigate('/login');
+    return 'Limite de requisições excedido. Por favor, aguarde alguns minutos antes de tentar novamente.';
+  }
+  
   return null;
 };
 

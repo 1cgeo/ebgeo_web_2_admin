@@ -27,11 +27,14 @@ import {
   Logout as LogoutIcon
 } from '@mui/icons-material';
 import { useAuth } from '@/context/AuthContext';
+import { DarkMode, LightMode } from '@mui/icons-material';
+import { useTheme as useAppTheme } from '@/context/ThemeContext';
 
 const drawerWidth = 240;
 
 const DashboardLayout = () => {
   const theme = useTheme();
+  const { themeMode, toggleTheme } = useAppTheme();
   const { logout } = useAuth();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -97,13 +100,27 @@ const DashboardLayout = () => {
       <Divider />
       <List>
         {menuItems.map((item) => (
-          <ListItem 
-            key={item.path} 
-            component={Link} 
+          <ListItem
+            key={item.path}
+            component={Link}
             to={item.path}
-            sx={{ cursor: 'pointer' }}
+            sx={{
+              cursor: 'pointer',
+              '& .MuiListItemText-primary': {
+                color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
+              },
+              '&:hover': {
+                backgroundColor: theme => theme.palette.mode === 'dark'
+                  ? 'rgba(255, 255, 255, 0.08)'
+                  : 'rgba(0, 0, 0, 0.04)'
+              }
+            }}
           >
-            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemIcon sx={{
+              color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
+            }}>
+              {item.icon}
+            </ListItemIcon>
             <ListItemText primary={item.title} />
           </ListItem>
         ))}
@@ -134,6 +151,14 @@ const DashboardLayout = () => {
           </Typography>
           <IconButton
             color="inherit"
+            onClick={toggleTheme}
+            title={themeMode === 'dark' ? 'Modo Claro' : 'Modo Escuro'}
+            sx={{ mr: 1 }}
+          >
+            {themeMode === 'dark' ? <LightMode /> : <DarkMode />}
+          </IconButton>
+          <IconButton
+            color="inherit"
             onClick={handleLogout}
             title="Sair"
           >
@@ -154,7 +179,10 @@ const DashboardLayout = () => {
           sx={{
             '& .MuiDrawer-paper': {
               boxSizing: 'border-box',
-              width: drawerWidth
+              width: drawerWidth,
+              borderRight: 1,
+              borderColor: 'divider',
+              bgcolor: 'background.paper'
             }
           }}
         >
