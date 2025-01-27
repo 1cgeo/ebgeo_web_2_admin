@@ -24,11 +24,13 @@ import {
   Map as ZoneIcon,
   Article as LogsIcon,
   History as AuditIcon,
-  Logout as LogoutIcon
+  Logout as LogoutIcon,
+  DarkMode,
+  LightMode
 } from '@mui/icons-material';
 import { useAuth } from '@/context/AuthContext';
-import { DarkMode, LightMode } from '@mui/icons-material';
 import { useTheme as useAppTheme } from '@/context/ThemeContext';
+import { ProfileButton } from '@/components/Profile/ProfileButton';
 
 const drawerWidth = 240;
 
@@ -101,28 +103,28 @@ const DashboardLayout = () => {
       <List>
         {menuItems.map((item) => (
           <ListItem
-            key={item.path}
-            component={Link}
-            to={item.path}
-            sx={{
-              cursor: 'pointer',
-              '& .MuiListItemText-primary': {
-                color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
-              },
-              '&:hover': {
-                backgroundColor: theme => theme.palette.mode === 'dark'
-                  ? 'rgba(255, 255, 255, 0.08)'
-                  : 'rgba(0, 0, 0, 0.04)'
-              }
-            }}
-          >
-            <ListItemIcon sx={{
+          key={item.path}
+          component={Link}
+          to={item.path}
+          sx={{
+            cursor: 'pointer',
+            '& .MuiListItemText-primary': {
               color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
-            }}>
-              {item.icon}
-            </ListItemIcon>
-            <ListItemText primary={item.title} />
-          </ListItem>
+            },
+            '&:hover': {
+              backgroundColor: theme => theme.palette.mode === 'dark'
+                ? 'rgba(255, 255, 255, 0.08)'
+                : 'rgba(0, 0, 0, 0.04)'
+            }
+          }}
+        >
+          <ListItemIcon sx={{
+            color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
+          }}>
+            {item.icon}
+          </ListItemIcon>
+          <ListItemText primary={item.title} />
+        </ListItem>
         ))}
       </List>
     </div>
@@ -157,6 +159,7 @@ const DashboardLayout = () => {
           >
             {themeMode === 'dark' ? <LightMode /> : <DarkMode />}
           </IconButton>
+          <ProfileButton />
           <IconButton
             color="inherit"
             onClick={handleLogout}
