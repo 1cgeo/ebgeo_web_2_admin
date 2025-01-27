@@ -1,5 +1,3 @@
-// src/pages/Users/hooks/useUsers.ts
-
 import { useState, useCallback, useEffect } from 'react';
 import { usersService } from '@/services/users';
 import { useDebounce } from '@/hooks/useDebounce';
@@ -9,7 +7,8 @@ import type { FilterState, SortableFields } from '@/types/users';
 const initialFilters: FilterState = {
   search: '',
   role: 'all',
-  status: 'all'
+  status: 'all',
+  organizacao: ''
 };
 
 export function useUsers() {
@@ -24,6 +23,7 @@ export function useUsers() {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const debouncedSearch = useDebounce(filters.search, 300);
+  const debouncedOrganizacao = useDebounce(filters.organizacao || '', 300);
 
   const fetchUsers = useCallback(async () => {
     if (debouncedSearch && debouncedSearch.length < 3) {
@@ -37,7 +37,8 @@ export function useUsers() {
         limit: rowsPerPage,
         search: debouncedSearch || undefined,
         role: filters.role === 'all' ? undefined : filters.role,
-        status: filters.status,
+        status: filters.status === 'all' ? undefined : filters.status,
+        organizacao: debouncedOrganizacao || undefined,
         sort: sortField,
         order: sortOrder
       };
@@ -51,7 +52,16 @@ export function useUsers() {
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, debouncedSearch, filters.role, filters.status, sortField, sortOrder]);
+  }, [
+    page, 
+    rowsPerPage, 
+    debouncedSearch, 
+    debouncedOrganizacao,
+    filters.role, 
+    filters.status, 
+    sortField, 
+    sortOrder
+  ]);
 
   useEffect(() => {
     fetchUsers();

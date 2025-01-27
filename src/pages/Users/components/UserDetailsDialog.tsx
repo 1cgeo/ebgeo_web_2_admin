@@ -13,6 +13,7 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
+  Divider
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import {
@@ -21,7 +22,10 @@ import {
   ViewInAr as ModelIcon,
   LocationOn as ZoneIcon,
   AdminPanelSettings,
-  VerifiedUser
+  VerifiedUser,
+  Badge,
+  AccountBox,
+  Business
 } from '@mui/icons-material';
 import type { UserDetails } from '@/types/users';
 
@@ -73,19 +77,77 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               Informações Básicas
             </Typography>
             <Box sx={{ pl: 2 }}>
-              <Typography variant="body1" gutterBottom>
-                <strong>Username:</strong> {user.username}
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                <strong>Email:</strong> {user.email}
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                <strong>Último acesso:</strong> {formatDate(user.lastLogin)}
-              </Typography>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                    <Person fontSize="small" color="action" />
+                    <Typography variant="body1">
+                      <strong>Username:</strong> {user.username}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Badge fontSize="small" color="action" />
+                    <Typography variant="body1">
+                      <strong>Email:</strong> {user.email}
+                    </Typography>
+                  </Box>
+                </Grid>
+                
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Último acesso:</strong> {formatDate(user.lastLogin)}
+                  </Typography>
+                  <Typography variant="body2" color="text.secondary">
+                    <strong>Criado em:</strong> {formatDate(user.createdAt)}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Box>
           </Grid>
 
-          {/* Estatísticas */}
+          <Grid size={{ xs: 12 }}>
+            <Divider sx={{ my: 2 }} />
+          </Grid>
+
+          {/* Dados Pessoais */}
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
+              Dados Pessoais
+            </Typography>
+            <Box sx={{ pl: 2 }}>
+              <Grid container spacing={2}>
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <Box display="flex" alignItems="center" gap={1} mb={1}>
+                    <AccountBox fontSize="small" color="action" />
+                    <Typography variant="body1">
+                      <strong>Nome Completo:</strong> {user.nome_completo || '-'}
+                    </Typography>
+                  </Box>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Badge fontSize="small" color="action" />
+                    <Typography variant="body1">
+                      <strong>Nome de Guerra:</strong> {user.nome_guerra || '-'}
+                    </Typography>
+                  </Box>
+                </Grid>
+                
+                <Grid size={{ xs: 12, sm: 6 }}>
+                  <Box display="flex" alignItems="center" gap={1}>
+                    <Business fontSize="small" color="action" />
+                    <Typography variant="body1">
+                      <strong>Organização Militar:</strong> {user.organizacao_militar || '-'}
+                    </Typography>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
+          </Grid>
+
+          <Grid size={{ xs: 12 }}>
+            <Divider sx={{ my: 2 }} />
+          </Grid>
+
+          {/* Status e Permissões */}
           <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Status e Permissões

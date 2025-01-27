@@ -1,12 +1,14 @@
 import React from 'react';
-import { Box, IconButton, Chip } from '@mui/material';
+import { Box, IconButton, Chip, Tooltip } from '@mui/material';
 import {
   Edit,
   Block,
   Person,
   Visibility,
   AdminPanelSettings,
-  PersonOff
+  PersonOff,
+  Badge,
+  Business
 } from '@mui/icons-material';
 import { DataTable } from '@/components/DataDisplay/DataTable';
 import type { User } from '@/types/users';
@@ -66,6 +68,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   const sortableFields: Record<string, SortableFields> = {
     username: 'username',
     email: 'email',
+    nome_completo: 'nome_completo',
+    nome_guerra: 'nome_guerra',
+    organizacao_militar: 'organizacao_militar',
     role: 'role',
     isActive: 'isActive',
     lastLogin: 'lastLogin',
@@ -84,14 +89,43 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           ) : (
             <Person fontSize="small" />
           )}
-          {value as string}
+          <span>{value as string}</span>
+        </Box>
+      )
+    },
+    {
+      id: 'nome_guerra',
+      label: 'Nome de Guerra',
+      sortable: true,
+      format: (value) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Badge fontSize="small" color="action" />
+          <span>{(value as string) || '-'}</span>
+        </Box>
+      )
+    },
+    {
+      id: 'nome_completo',
+      label: 'Nome Completo',
+      sortable: true,
+      format: (value) => <span>{(value as string) || '-'}</span>
+    },
+    {
+      id: 'organizacao_militar',
+      label: 'OM',
+      sortable: true,
+      format: (value) => (
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <Business fontSize="small" color="action" />
+          <span>{(value as string) || '-'}</span>
         </Box>
       )
     },
     {
       id: 'email',
       label: 'Email',
-      sortable: true
+      sortable: true,
+      format: (value) => <span>{value as string}</span>
     },
     {
       id: 'role',
@@ -146,28 +180,31 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       align: 'right',
       format: (_, row) => (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
-          <IconButton
-            size="small"
-            onClick={() => onViewDetails(row.id)}
-            title="Visualizar detalhes"
-          >
-            <Visibility fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => onEdit(row.id)}
-            title="Editar"
-          >
-            <Edit fontSize="small" />
-          </IconButton>
-          <IconButton
-            size="small"
-            onClick={() => onDelete(row.id)}
-            title={row.isActive ? 'Desativar' : 'Ativar'}
-            color={row.isActive ? 'error' : 'success'}
-          >
-            <Block fontSize="small" />
-          </IconButton>
+          <Tooltip title="Visualizar detalhes">
+            <IconButton
+              size="small"
+              onClick={() => onViewDetails(row.id)}
+            >
+              <Visibility fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Editar">
+            <IconButton
+              size="small"
+              onClick={() => onEdit(row.id)}
+            >
+              <Edit fontSize="small" />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title={row.isActive ? 'Desativar' : 'Ativar'}>
+            <IconButton
+              size="small"
+              onClick={() => onDelete(row.id)}
+              color={row.isActive ? 'error' : 'success'}
+            >
+              <Block fontSize="small" />
+            </IconButton>
+          </Tooltip>
         </Box>
       )
     }

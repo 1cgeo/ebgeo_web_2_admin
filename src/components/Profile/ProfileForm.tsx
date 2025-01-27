@@ -6,7 +6,9 @@ import {
   Switch,
   Button,
   CircularProgress,
-  Alert
+  Alert,
+  Typography,
+  Divider
 } from '@mui/material';
 import { useAuth } from '@/context/AuthContext';
 import { useSnackbar } from 'notistack';
@@ -18,6 +20,9 @@ import type { User } from '@/types/users';
 
 interface ProfileFormData extends Record<string, string> {
   email: string;
+  nome_completo: string;
+  nome_guerra: string;
+  organizacao_militar: string;
   currentPassword: string;
   newPassword: string;
   confirmPassword: string;
@@ -32,6 +37,9 @@ interface UpdateProfileResponse {
   email: string;
   id: string;
   username: string;
+  nome_completo: string;
+  nome_guerra: string;
+  organizacao_militar: string;
   role: 'admin' | 'user';
   token: string;
 }
@@ -48,6 +56,9 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
 
   const initialValues: ProfileFormData = {
     email: user?.email || '',
+    nome_completo: user?.nome_completo || '',
+    nome_guerra: user?.nome_guerra || '',
+    organizacao_militar: user?.organizacao_militar || '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: ''
@@ -60,6 +71,18 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
       errors.email = 'Email é obrigatório';
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email)) {
       errors.email = 'Email inválido';
+    }
+
+    if (values.nome_completo && values.nome_completo.length > 255) {
+      errors.nome_completo = 'Nome completo deve ter no máximo 255 caracteres';
+    }
+
+    if (values.nome_guerra && values.nome_guerra.length > 50) {
+      errors.nome_guerra = 'Nome de guerra deve ter no máximo 50 caracteres';
+    }
+
+    if (values.organizacao_militar && values.organizacao_militar.length > 255) {
+      errors.organizacao_militar = 'Organização militar deve ter no máximo 255 caracteres';
     }
 
     if (changePassword) {
@@ -148,10 +171,13 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
     }
 
     try {
-      // Update email
+      // Update profile data
       await updateProfile(() => 
         api.put('/api/users/me', {
-          email: values.email
+          email: values.email,
+          nome_completo: values.nome_completo || undefined,
+          nome_guerra: values.nome_guerra || undefined,
+          organizacao_militar: values.organizacao_militar || undefined
         }).then(response => response.data)
       );
 
@@ -177,6 +203,10 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
         </Alert>
       )}
 
+      <Typography variant="subtitle2" gutterBottom>
+        Informações Básicas
+      </Typography>
+
       <TextField
         fullWidth
         required
@@ -191,6 +221,50 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
         disabled={isSubmitting}
       />
 
+      <Divider sx={{ my: 3 }} />
+
+      <Typography variant="subtitle2" gutterBottom>
+        Dados Pessoais
+      </Typography>
+
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Nome Completo"
+        name="nome_completo"
+        value={values.nome_completo}
+        onChange={handleChange}
+        error={Boolean(errors.nome_completo)}
+        helperText={errors.nome_completo}
+        disabled={isSubmitting}
+      />
+
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Nome de Guerra"
+        name="nome_guerra"
+        value={values.nome_guerra}
+        onChange={handleChange}
+        error={Boolean(errors.nome_guerra)}
+        helperText={errors.nome_guerra}
+        disabled={isSubmitting}
+      />
+
+      <TextField
+        fullWidth
+        margin="normal"
+        label="Organização Militar"
+        name="organizacao_militar"
+        value={values.organizacao_militar}
+        onChange={handleChange}
+        error={Boolean(errors.organizacao_militar)}
+        helperText={errors.organizacao_militar}
+        disabled={isSubmitting}
+      />
+
+      <Divider sx={{ my: 3 }} />
+
       <FormControlLabel
         control={
           <Switch
@@ -200,7 +274,6 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
           />
         }
         label="Alterar senha"
-        sx={{ my: 1 }}
       />
 
       <PasswordSection

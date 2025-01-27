@@ -14,13 +14,26 @@ interface ListParams {
   status?: 'active' | 'inactive' | 'all';
   sort?: string;
   order?: 'asc' | 'desc';
+  organizacao?: string;
+}
+
+interface ApiListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: 'admin' | 'user';
+  status?: boolean;
+  sort?: string;
+  order?: 'asc' | 'desc';
+  organizacao?: string;
 }
 
 export const usersService = {
   async list(params: ListParams): Promise<UserListResponse> {
     // Converter o status string para boolean para a API
-    const apiParams = {
+    const apiParams: ApiListParams = {
       ...params,
+      role: params.role === 'all' ? undefined : params.role,
       status: params.status === 'active' ? true : 
               params.status === 'inactive' ? false : 
               undefined

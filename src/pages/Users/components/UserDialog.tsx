@@ -1,5 +1,3 @@
-// src/pages/Users/components/UserDialog.tsx
-
 import React, { useState, useEffect, useCallback } from 'react';
 import {
   Dialog,
@@ -14,7 +12,8 @@ import {
   MenuItem,
   FormHelperText,
   IconButton,
-  InputAdornment
+  InputAdornment,
+  Typography
 } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
@@ -37,17 +36,18 @@ interface ValidationErrors {
   email?: string;
   password?: string;
   confirmPassword?: string;
+  nome_completo?: string;
+  nome_guerra?: string;
+  organizacao_militar?: string;
   role?: string;
 }
-
-type FormDataWithOptionalPassword = Omit<FormData, 'password' | 'confirmPassword'> & {
-  password?: string;
-  confirmPassword?: string;
-};
 
 const initialFormData: FormData = {
   username: '',
   email: '',
+  nome_completo: '',
+  nome_guerra: '',
+  organizacao_militar: '',
   password: '',
   confirmPassword: '',
   role: 'user',
@@ -85,6 +85,9 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       setFormData({
         username: user.username,
         email: user.email,
+        nome_completo: user.nome_completo || '',
+        nome_guerra: user.nome_guerra || '',
+        organizacao_militar: user.organizacao_militar || '',
         password: '',
         confirmPassword: '',
         role: user.role,
@@ -136,6 +139,18 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       }
     }
 
+    if (formData.nome_completo && formData.nome_completo.length > 255) {
+      newErrors.nome_completo = 'Nome completo deve ter no máximo 255 caracteres';
+    }
+
+    if (formData.nome_guerra && formData.nome_guerra.length > 50) {
+      newErrors.nome_guerra = 'Nome de guerra deve ter no máximo 50 caracteres';
+    }
+
+    if (formData.organizacao_militar && formData.organizacao_militar.length > 255) {
+      newErrors.organizacao_militar = 'Organização militar deve ter no máximo 255 caracteres';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -145,15 +160,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
     
     if (!validateForm()) return;
 
-    let submitData: FormDataWithOptionalPassword = { ...formData };
-    
-    // Se for edição e não houver senha, remover campos de senha
-    if (userId && !submitData.password) {
-      const { password: _password, confirmPassword: _confirmPassword, ...rest } = submitData;
-      submitData = rest;
-    }
-
-    await onSubmit(submitData as FormData);
+    await onSubmit(formData);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -172,7 +179,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
     <Dialog 
       open={open} 
       onClose={onClose}
-      maxWidth="sm"
+      maxWidth="md"
       fullWidth
       PaperProps={{
         component: 'form',
@@ -185,6 +192,13 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
+          {/* Informações básicas */}
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom>
+              Informações Básicas
+            </Typography>
+          </Grid>
+
           <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="username"
@@ -211,6 +225,56 @@ export const UserDialog: React.FC<UserDialogProps> = ({
               fullWidth
               required
             />
+          </Grid>
+
+          {/* Dados Pessoais */}
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+              Dados Pessoais
+            </Typography>
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              name="nome_completo"
+              label="Nome Completo"
+              value={formData.nome_completo}
+              onChange={handleChange}
+              error={!!errors.nome_completo}
+              helperText={errors.nome_completo}
+              fullWidth
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12, sm: 6 }}>
+            <TextField
+              name="nome_guerra"
+              label="Nome de Guerra"
+              value={formData.nome_guerra}
+              onChange={handleChange}
+              error={!!errors.nome_guerra}
+              helperText={errors.nome_guerra}
+              fullWidth
+            />
+          </Grid>
+
+          <Grid size={{ xs: 12 }}>
+            <TextField
+              name="organizacao_militar"
+              label="Organização Militar"
+              value={formData.organizacao_militar}
+              onChange={handleChange}
+              error={!!errors.organizacao_militar}
+              helperText={errors.organizacao_militar}
+              fullWidth
+            />
+          </Grid>
+
+          {/* Perfil e grupos */}
+          <Grid size={{ xs: 12 }}>
+            <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+              Perfil e Grupos
+            </Typography>
           </Grid>
 
           <Grid size={{ xs: 12, sm: 6 }}>
@@ -253,8 +317,15 @@ export const UserDialog: React.FC<UserDialogProps> = ({
             />
           </Grid>
 
+          {/* Senha */}
           {(!userId || formData.password) && (
             <>
+              <Grid size={{ xs: 12 }}>
+                <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+                  Senha
+                </Typography>
+              </Grid>
+
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="password"

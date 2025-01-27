@@ -5,6 +5,9 @@ interface User {
   id: string;
   username: string;
   email: string;
+  nome_completo?: string;
+  nome_guerra?: string;
+  organizacao_militar?: string;
   role: 'admin' | 'user';
 }
 
