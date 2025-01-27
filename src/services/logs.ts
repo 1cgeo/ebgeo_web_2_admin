@@ -1,5 +1,5 @@
 import { api } from './api';
-import { LogResponse, LogQueryParams } from '@/types/admin';
+import type { LogResponse, LogQueryParams } from '@/types/logs';
 
 export const logsService = {
   async query(params: LogQueryParams): Promise<LogResponse> {

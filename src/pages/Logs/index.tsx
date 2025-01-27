@@ -1,10 +1,63 @@
-import React from 'react';
-import { Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box } from '@mui/material';
+import { PageContainer } from '@/components/Layout/PageContainer';
+import { PageHeader } from '@/components/Layout/PageHeader';
+import { LogsTable } from './components/LogsTable';
+import { LogsFilterBar } from './components/LogsFilterBar';
+import { LogDetailsDialog } from './components/LogDetailsDialog';
+import { useLogs } from './hooks/useLogs';
+import type { LogEntry } from '@/types/logs';
 
-const AuditPage: React.FC = () => {
+const LogsPage: React.FC = () => {
+  const {
+    logs,
+    total,
+    loading,
+    search,
+    filters,
+    handleSearch,
+    handleFilterChange
+  } = useLogs();
+
+  const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null);
+
+  const handleViewDetails = (log: LogEntry) => {
+    setSelectedLog(log);
+  };
+
   return (
-    <Typography variant="h4">Logs</Typography>
+    <PageContainer>
+      <PageHeader
+        title="Logs do Sistema"
+        subtitle={`Total de ${total} registros encontrados`}
+      />
+
+      <LogsFilterBar
+        search={search}
+        level={filters.level}
+        category={filters.category}
+        limit={filters.limit || 100}
+        onSearchChange={handleSearch}
+        onLevelChange={(level) => handleFilterChange({ level })}
+        onCategoryChange={(category) => handleFilterChange({ category })}
+        onLimitChange={(limit) => handleFilterChange({ limit })}
+      />
+
+      <Box sx={{ mt: 3 }}>
+        <LogsTable
+          logs={logs}
+          loading={loading}
+          onViewDetails={handleViewDetails}
+        />
+      </Box>
+
+      <LogDetailsDialog
+        open={selectedLog !== null}
+        log={selectedLog}
+        onClose={() => setSelectedLog(null)}
+      />
+    </PageContainer>
   );
 };
 
-export default AuditPage;
+export default LogsPage;
