@@ -1,15 +1,14 @@
 import { api } from './api';
-import { Catalog3DSearchResponse, ModelPermissions, UpdateModelPermissionsRequest } from '@/types/catalog';
-
-interface SearchParams {
-  q?: string;
-  page?: number;
-  nr_records?: number;
-}
+import type {
+  ModelPermissionsListResponse,
+  ModelPermissions,
+  UpdateModelPermissionsRequest,
+  ModelPermissionsQueryParams
+} from '@/types/catalog';
 
 export const catalogService = {
-  async search(params: SearchParams): Promise<Catalog3DSearchResponse> {
-    const { data } = await api.get('/api/catalog3d/catalogo3d', { params });
+  async listPermissions(params: ModelPermissionsQueryParams): Promise<ModelPermissionsListResponse> {
+    const { data } = await api.get('/api/catalog3d/permissions', { params });
     return data;
   },
 
