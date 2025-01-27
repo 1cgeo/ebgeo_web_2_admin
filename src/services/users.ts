@@ -1,17 +1,32 @@
 import { api } from './api';
-import { UserListResponse, UserDetails, CreateUserDTO, UpdateUserDTO } from '@/types/users';
+import type { 
+  UserListResponse, 
+  UserDetails, 
+  CreateUserDTO, 
+  UpdateUserDTO 
+} from '@/types/users';
 
 interface ListParams {
   page?: number;
   limit?: number;
   search?: string;
-  status?: 'active' | 'inactive' | 'all';
   role?: 'admin' | 'user' | 'all';
+  status?: 'active' | 'inactive' | 'all';
+  sort?: string;
+  order?: 'asc' | 'desc';
 }
 
 export const usersService = {
   async list(params: ListParams): Promise<UserListResponse> {
-    const { data } = await api.get('/api/users', { params });
+    // Converter o status string para boolean para a API
+    const apiParams = {
+      ...params,
+      status: params.status === 'active' ? true : 
+              params.status === 'inactive' ? false : 
+              undefined
+    };
+    
+    const { data } = await api.get('/api/users', { params: apiParams });
     return data;
   },
 
@@ -28,5 +43,9 @@ export const usersService = {
   async update(id: string, userData: UpdateUserDTO): Promise<UserDetails> {
     const { data } = await api.put(`/api/users/${id}`, userData);
     return data;
+  },
+
+  async updatePassword(id: string, newPassword: string): Promise<void> {
+    await api.put(`/api/users/${id}/password`, { newPassword });
   }
 };

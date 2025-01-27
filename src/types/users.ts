@@ -72,3 +72,20 @@ export interface User {
     page: number;
     limit: number;
   }
+
+  export type SortableFields = 'username' | 'email' | 'role' | 'isActive' | 'lastLogin' | 'groupCount';
+
+export interface FilterState {
+  search: string;
+  role: 'all' | 'admin' | 'user';
+  status: 'all' | 'active' | 'inactive';
+}
+
+export interface FormData extends Omit<CreateUserDTO, 'groupIds'> {
+  confirmPassword: string;
+  groupIds: string[];
+}
+
+export type UserTableItem = User & {
+  groupCount: number;
+};
