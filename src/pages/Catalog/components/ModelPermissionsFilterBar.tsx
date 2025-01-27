@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { Grid, FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
 import { FilterBar } from '@/components/Form/FilterBar';
 import { MemorizedSearchField } from './MemorizedSearchField';
 import { ModelAccessLevel } from '@/types/catalog';
+import Grid from '@mui/material/Grid2';
 
 interface ModelPermissionsFilterBarProps {
   search: string;
@@ -49,7 +50,7 @@ export const ModelPermissionsFilterBar: React.FC<ModelPermissionsFilterBarProps>
   return (
     <FilterBar>
       <Grid container spacing={2}>
-        <Grid xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <MemorizedSearchField
             value={search}
             onChange={handleChange}
@@ -59,7 +60,7 @@ export const ModelPermissionsFilterBar: React.FC<ModelPermissionsFilterBarProps>
           />
         </Grid>
         
-        <Grid xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <FormControl fullWidth size="small">
             <InputLabel>Nível de Acesso</InputLabel>
             <Select
@@ -75,7 +76,7 @@ export const ModelPermissionsFilterBar: React.FC<ModelPermissionsFilterBarProps>
           </FormControl>
         </Grid>
 
-        <Grid xs={12} sm={6} md={4}>
+        <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <FormControl fullWidth size="small">
             <InputLabel>Tipo de Modelo</InputLabel>
             <Select

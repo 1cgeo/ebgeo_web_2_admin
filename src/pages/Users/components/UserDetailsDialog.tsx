@@ -13,8 +13,8 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Grid
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import {
   Person,
   Group as GroupIcon,
@@ -68,7 +68,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Informações Básicas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Informações Básicas
             </Typography>
@@ -86,7 +86,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
           </Grid>
 
           {/* Estatísticas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Status e Permissões
             </Typography>
@@ -110,7 +110,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
           </Grid>
 
           {/* Grupos */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Grupos
             </Typography>
@@ -139,7 +139,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
           </Grid>
 
           {/* Permissões de Modelos */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Acesso a Modelos ({user.permissions.models.count})
             </Typography>
@@ -168,7 +168,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
           </Grid>
 
           {/* Permissões de Zonas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Acesso a Zonas ({user.permissions.zones.count})
             </Typography>

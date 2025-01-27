@@ -13,10 +13,10 @@ import {
   Select,
   MenuItem,
   FormHelperText,
-  Grid,
   IconButton,
   InputAdornment
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { SelectChangeEvent } from '@mui/material';
 import { Autocomplete } from '@mui/material';
@@ -185,7 +185,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
-          <Grid xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="username"
               label="Username"
@@ -199,7 +199,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
             />
           </Grid>
 
-          <Grid xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <TextField
               name="email"
               label="Email"
@@ -213,7 +213,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
             />
           </Grid>
 
-          <Grid xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <FormControl fullWidth>
               <InputLabel>Perfil</InputLabel>
               <Select
@@ -231,7 +231,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
             </FormControl>
           </Grid>
 
-          <Grid xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Autocomplete
               multiple
               options={groups}
@@ -255,7 +255,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
 
           {(!userId || formData.password) && (
             <>
-              <Grid xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="password"
                   label={userId ? "Nova Senha" : "Senha"}
@@ -281,7 +281,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
                 />
               </Grid>
 
-              <Grid xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="confirmPassword"
                   label="Confirmar Senha"

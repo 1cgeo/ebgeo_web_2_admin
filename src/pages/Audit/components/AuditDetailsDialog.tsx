@@ -8,9 +8,9 @@ import {
   Typography,
   Box,
   Divider,
-  Chip,
-  Grid
+  Chip
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import {
   AccessTime as TimeIcon,
   AccountCircle as UserIcon,
@@ -87,7 +87,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Informações Básicas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Box sx={{ mb: 2 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
                 <TimeIcon color="action" />
@@ -106,7 +106,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
           </Grid>
 
           {/* Usuário */}
-          <Grid item xs={12} sm={6}>
+          <Grid size={{ xs: 12, sm: 6 }}>
             <Typography variant="subtitle2" gutterBottom>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <UserIcon fontSize="small" />
@@ -123,7 +123,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
 
           {/* Alvo */}
           {entry.target && (
-            <Grid item xs={12} sm={6}>
+            <Grid size={{ xs: 12, sm: 6 }}>
               <Typography variant="subtitle2" gutterBottom>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <CategoryIcon fontSize="small" />
@@ -140,7 +140,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
           )}
 
           {/* Detalhes Técnicos */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Divider sx={{ my: 2 }} />
             <Typography variant="subtitle2" gutterBottom>
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -150,13 +150,13 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
             </Typography>
             
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
+              <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
                   IP: {entry.ip}
                 </Typography>
               </Grid>
               {entry.userAgent && (
-                <Grid item xs={12} sm={6}>
+                <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="body2" color="text.secondary">
                     User Agent: {entry.userAgent}
                   </Typography>
@@ -167,7 +167,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
 
           {/* Detalhes da Ação */}
           {Object.keys(entry.details).length > 0 && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Divider sx={{ my: 2 }} />
               <Typography variant="subtitle2" gutterBottom>
                 Detalhes da Ação

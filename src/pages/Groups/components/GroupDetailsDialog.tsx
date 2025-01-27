@@ -13,8 +13,8 @@ import {
   ListItemText,
   ListItemAvatar,
   Avatar,
-  Grid
 } from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import {
   Group as GroupIcon,
   ViewInAr as ModelIcon,
@@ -65,7 +65,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
       <DialogContent dividers>
         <Grid container spacing={3}>
           {/* Informações Básicas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Informações Básicas
             </Typography>
@@ -87,7 +87,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
           </Grid>
 
           {/* Estatísticas */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Estatísticas
             </Typography>
@@ -111,7 +111,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
           </Grid>
 
           {/* Membros */}
-          <Grid item xs={12}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Membros
             </Typography>
@@ -134,7 +134,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
 
           {/* Permissões de Modelos */}
           {group.model_permissions && group.model_permissions.length > 0 && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                 Permissões de Modelos
               </Typography>
@@ -158,7 +158,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
 
           {/* Permissões de Zonas */}
           {group.zone_permissions && group.zone_permissions.length > 0 && (
-            <Grid item xs={12}>
+            <Grid size={{ xs: 12 }}>
               <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
                 Permissões de Zonas
               </Typography>
