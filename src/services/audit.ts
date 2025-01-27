@@ -1,9 +1,9 @@
 import { api } from './api';
-import { AuditResponse, AuditQueryParams } from '@/types/admin';
+import type { AuditResponse, AuditFilters } from '@/types/audit';
 
 export const auditService = {
-  async query(params: AuditQueryParams): Promise<AuditResponse> {
-    const { data } = await api.get('/api/admin/audit', { params });
+  async query(filters: AuditFilters): Promise<AuditResponse> {
+    const { data } = await api.get('/api/admin/audit', { params: filters });
     return data;
   }
 };
