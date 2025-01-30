@@ -72,9 +72,9 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     nome_guerra: 'nome_guerra',
     organizacao_militar: 'organizacao_militar',
     role: 'role',
-    isActive: 'isActive',
-    lastLogin: 'lastLogin',
-    groupCount: 'groupCount'
+    isActive: 'is_active',
+    lastLogin: 'last_login',
+    groupCount: 'group_count'
   };
 
   const columns: Column<UserTableItem>[] = [

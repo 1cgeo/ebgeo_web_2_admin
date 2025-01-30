@@ -1,3 +1,17 @@
+export type UserStatus = 'active' | 'inactive' | 'all';
+export type UserRole = 'admin' | 'user' | 'all';
+export type SortableFields = 'username' | 'email' | 'role' | 'created_at' | 'last_login' | 'group_count' | 'nome_completo' | 'nome_guerra' | 'organizacao_militar' | 'is_active';
+
+export interface ListParams {
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: UserRole;
+  status?: UserStatus;
+  sort?: SortableFields;
+  order?: 'asc' | 'desc';
+}
+
 export interface User {
   id: string;
   username: string;
@@ -89,16 +103,7 @@ export interface UserListResponse {
   limit: number;
 }
 
-export type SortableFields = 
-  | 'username' 
-  | 'email' 
-  | 'nome_completo'
-  | 'nome_guerra'
-  | 'organizacao_militar'
-  | 'role' 
-  | 'isActive' 
-  | 'lastLogin' 
-  | 'groupCount';
+
 
 export interface FilterState {
   search: string;
