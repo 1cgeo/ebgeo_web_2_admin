@@ -1,8 +1,5 @@
-// src/pages/Logs/hooks/useLogs.ts
-
 import { useState, useCallback, useEffect } from 'react';
 import { logsService } from '@/services/logs';
-import { useDebounce } from '@/hooks/useDebounce';
 import type { LogEntry, LogQueryParams } from '@/types/logs';
 
 export function useLogs() {
@@ -10,27 +7,23 @@ export function useLogs() {
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [search, setSearch] = useState('');
   const [filters, setFilters] = useState<LogQueryParams>({
     limit: 100
   });
 
-  const debouncedSearch = useDebounce(search, 300);
-
   const fetchLogs = useCallback(async () => {
-    if (debouncedSearch && debouncedSearch.length < 3) {
-      return;
-    }
-
     try {
       setLoading(true);
-      const params: LogQueryParams = {
-        ...filters,
-        search: debouncedSearch || undefined
-      };
-
-      const response = await logsService.query(params);
-      setLogs(response.logs);
+      const response = await logsService.query(filters);
+      
+      // Ordenar logs por timestamp decrescente
+      const sortedLogs = [...response.logs].sort((a, b) => {
+        const timeA = new Date(a.time || a.timestamp || 0).getTime();
+        const timeB = new Date(b.time || b.timestamp || 0).getTime();
+        return timeB - timeA;
+      });
+      
+      setLogs(sortedLogs);
       setTotal(response.total);
       setError(null);
     } catch (err) {
@@ -38,19 +31,11 @@ export function useLogs() {
     } finally {
       setLoading(false);
     }
-  }, [filters, debouncedSearch]);
+  }, [filters]);
 
   useEffect(() => {
     fetchLogs();
   }, [fetchLogs]);
-
-  const handleSearch = (value: string) => {
-    setSearch(value);
-    if (value.length >= 3 || value.length === 0) {
-      // Mantém consistente com outros módulos
-      setFilters(current => ({ ...current }));
-    }
-  };
 
   const handleFilterChange = (newFilters: Partial<LogQueryParams>) => {
     setFilters(current => ({
@@ -64,9 +49,7 @@ export function useLogs() {
     total,
     loading,
     error,
-    search,
     filters,
-    handleSearch,
     handleFilterChange,
     refresh: fetchLogs
   };

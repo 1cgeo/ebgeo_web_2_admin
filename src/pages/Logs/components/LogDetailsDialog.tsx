@@ -11,36 +11,8 @@ import {
   Paper,
   Divider
 } from '@mui/material';
-import type { LogEntry, LogLevel } from '@/types/logs';
-
-const getLevelColor = (level: LogLevel): "error" | "warning" | "info" | "default" => {
-  switch (level) {
-    case 'ERROR':
-      return 'error';
-    case 'WARN':
-      return 'warning';
-    case 'INFO':
-      return 'info';
-    default:
-      return 'default';
-  }
-};
-
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  const formatted = date.toLocaleString('pt-BR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-  
-  // Adiciona milissegundos manualmente
-  const ms = date.getMilliseconds().toString().padStart(3, '0');
-  return `${formatted}.${ms}`;
-};
+import type { LogEntry } from '@/types/logs';
+import { getLevelColor, getLevelLabel, formatDate } from './logUtils';
 
 const formatDetails = (details: Record<string, unknown> | undefined): string => {
   if (!details) return 'Nenhum detalhe disponível';
@@ -73,11 +45,11 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
     >
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="h6" component="span">
+          <Typography variant="h6">
             Detalhes do Log
           </Typography>
           <Chip
-            label={log.level}
+            label={getLevelLabel(log.level)}
             color={getLevelColor(log.level)}
             size="small"
           />
@@ -92,7 +64,7 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
               Timestamp
             </Typography>
             <Typography variant="body1">
-              {formatDate(log.timestamp)}
+              {formatDate(log.time || log.timestamp)}
             </Typography>
           </Box>
 
@@ -114,7 +86,7 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
               Mensagem
             </Typography>
             <Typography variant="body1">
-              {log.message}
+              {log.msg || log.message || 'Sem mensagem'}
             </Typography>
           </Box>
 

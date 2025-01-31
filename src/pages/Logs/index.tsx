@@ -13,9 +13,7 @@ const LogsPage: React.FC = () => {
     logs,
     total,
     loading,
-    search,
     filters,
-    handleSearch,
     handleFilterChange
   } = useLogs();
 
@@ -33,11 +31,9 @@ const LogsPage: React.FC = () => {
       />
 
       <LogsFilterBar
-        search={search}
         level={filters.level}
         category={filters.category}
         limit={filters.limit || 100}
-        onSearchChange={handleSearch}
         onLevelChange={(level) => handleFilterChange({ level })}
         onCategoryChange={(category) => handleFilterChange({ category })}
         onLimitChange={(limit) => handleFilterChange({ limit })}

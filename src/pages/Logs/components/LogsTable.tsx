@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { 
   Paper, 
@@ -11,34 +10,12 @@ import {
   Chip,
   IconButton,
   Box,
-  LinearProgress
+  LinearProgress,
+  Typography
 } from '@mui/material';
 import { Visibility } from '@mui/icons-material';
-import type { LogEntry, LogLevel } from '@/types/logs';
-
-const getLevelColor = (level: LogLevel): "error" | "warning" | "info" | "default" => {
-  switch (level) {
-    case 'ERROR':
-      return 'error';
-    case 'WARN':
-      return 'warning';
-    case 'INFO':
-      return 'info';
-    default:
-      return 'default';
-  }
-};
-
-const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleString('pt-BR', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit'
-  });
-};
+import type { LogEntry  } from '@/types/logs';
+import { getLevelColor, getLevelLabel, formatDate } from './logUtils';
 
 interface LogsTableProps {
   logs: LogEntry[];
@@ -54,7 +31,9 @@ export const LogsTable: React.FC<LogsTableProps> = ({
   if (logs.length === 0 && !loading) {
     return (
       <Paper sx={{ p: 3, textAlign: 'center' }}>
-        Nenhum log encontrado com os filtros atuais.
+        <Typography color="text.secondary">
+          Nenhum log encontrado com os filtros atuais.
+        </Typography>
       </Paper>
     );
   }
@@ -84,46 +63,50 @@ export const LogsTable: React.FC<LogsTableProps> = ({
           </TableRow>
         </TableHead>
         <TableBody>
-          {logs.map((log) => (
-            <TableRow
-              key={log.timestamp + log.message}
-              sx={{
-                '&:hover': {
-                  backgroundColor: 'action.hover'
-                }
-              }}
-            >
-              <TableCell sx={{ whiteSpace: 'nowrap' }}>
-                {formatDate(log.timestamp)}
-              </TableCell>
-              <TableCell>
-                <Chip
-                  label={log.level}
-                  color={getLevelColor(log.level)}
-                  size="small"
-                />
-              </TableCell>
-              <TableCell>{log.category}</TableCell>
-              <TableCell sx={{ maxWidth: 400 }}>
-                <Box sx={{ 
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap'
-                }}>
-                  {log.message}
-                </Box>
-              </TableCell>
-              <TableCell align="right">
-                <IconButton
-                  size="small"
-                  onClick={() => onViewDetails(log)}
-                  title="Ver detalhes"
-                >
-                  <Visibility fontSize="small" />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+          {logs.map((log, index) => {
+            const time = log.time || log.timestamp;
+            
+            return (
+              <TableRow
+                key={`${time}-${index}`}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: 'action.hover'
+                  }
+                }}
+              >
+                <TableCell sx={{ whiteSpace: 'nowrap' }}>
+                  {formatDate(time)}
+                </TableCell>
+                <TableCell>
+                  <Chip
+                    label={getLevelLabel(log.level)}
+                    color={getLevelColor(log.level)}
+                    size="small"
+                  />
+                </TableCell>
+                <TableCell>{log.category}</TableCell>
+                <TableCell sx={{ maxWidth: 400 }}>
+                  <Box sx={{ 
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {log.msg || log.message || 'Sem mensagem'}
+                  </Box>
+                </TableCell>
+                <TableCell align="right">
+                  <IconButton
+                    size="small"
+                    onClick={() => onViewDetails(log)}
+                    title="Ver detalhes"
+                  >
+                    <Visibility fontSize="small" />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            );
+          })}
         </TableBody>
       </Table>
     </TableContainer>

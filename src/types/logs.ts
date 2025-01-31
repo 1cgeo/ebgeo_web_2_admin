@@ -1,3 +1,5 @@
+export type PinoLevel = 10 | 20 | 30 | 40 | 50;
+
 export type LogLevel = 'ERROR' | 'WARN' | 'INFO' | 'DEBUG';
 
 export type LogCategory = 
@@ -11,10 +13,12 @@ export type LogCategory =
   | 'ADMIN';
 
 export interface LogEntry {
-  timestamp: string;
-  level: LogLevel;
+  level: PinoLevel;
+  time?: string;
+  timestamp?: string;
+  msg?: string;
+  message?: string;
   category: LogCategory;
-  message: string;
   details?: Record<string, unknown>;
 }
 

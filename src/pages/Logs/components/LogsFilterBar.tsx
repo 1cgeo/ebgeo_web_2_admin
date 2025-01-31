@@ -1,14 +1,10 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 import { 
   FormControl, 
-  InputLabel, 
   MenuItem, 
-  Select, 
-  TextField,
-  Box
+  Select
 } from '@mui/material';
 import { FilterBar } from '@/components/Form/FilterBar';
-import { SearchField } from '@/components/Form/SearchField';
 import type { LogLevel, LogCategory } from '@/types/logs';
 
 const LOG_LEVELS: LogLevel[] = ['ERROR', 'WARN', 'INFO', 'DEBUG'];
@@ -24,53 +20,31 @@ const LOG_CATEGORIES: LogCategory[] = [
 ];
 
 interface LogsFilterBarProps {
-  search: string;
   level?: LogLevel;
   category?: LogCategory;
   limit: number;
-  onSearchChange: (value: string) => void;
   onLevelChange: (level: LogLevel | undefined) => void;
   onCategoryChange: (category: LogCategory | undefined) => void;
   onLimitChange: (limit: number) => void;
 }
 
 export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
-  search,
   level,
   category,
   limit,
-  onSearchChange,
   onLevelChange,
   onCategoryChange,
   onLimitChange
 }) => {
-  const handleClearSearch = useCallback(() => {
-    onSearchChange('');
-  }, [onSearchChange]);
-
-  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-  }, [onSearchChange]);
-
   return (
     <FilterBar>
-      <Box sx={{ width: 300 }}>
-        <SearchField
-          value={search}
-          onChange={handleSearchChange}
-          onClear={handleClearSearch}
-          placeholder="Buscar logs..."
-        />
-      </Box>
-
       <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel>Nível</InputLabel>
         <Select
           value={level || ''}
           onChange={(e) => onLevelChange(e.target.value as LogLevel || undefined)}
-          label="Nível"
+          displayEmpty
         >
-          <MenuItem value="">Todos</MenuItem>
+          <MenuItem value="">Todos os Níveis</MenuItem>
           {LOG_LEVELS.map((level) => (
             <MenuItem key={level} value={level}>
               {level}
@@ -80,13 +54,12 @@ export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
       </FormControl>
 
       <FormControl sx={{ minWidth: 120 }}>
-        <InputLabel>Categoria</InputLabel>
         <Select
           value={category || ''}
           onChange={(e) => onCategoryChange(e.target.value as LogCategory || undefined)}
-          label="Categoria"
+          displayEmpty
         >
-          <MenuItem value="">Todas</MenuItem>
+          <MenuItem value="">Todas as Categorias</MenuItem>
           {LOG_CATEGORIES.map((category) => (
             <MenuItem key={category} value={category}>
               {category}
@@ -96,17 +69,15 @@ export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
       </FormControl>
 
       <FormControl sx={{ width: 120 }}>
-        <TextField
-          type="number"
-          label="Limite"
+        <Select
           value={limit}
           onChange={(e) => onLimitChange(Number(e.target.value))}
-          inputProps={{
-            min: 1,
-            max: 1000,
-            step: 50
-          }}
-        />
+        >
+          <MenuItem value={50}>50 registros</MenuItem>
+          <MenuItem value={100}>100 registros</MenuItem>
+          <MenuItem value={500}>500 registros</MenuItem>
+          <MenuItem value={1000}>1000 registros</MenuItem>
+        </Select>
       </FormControl>
     </FilterBar>
   );
