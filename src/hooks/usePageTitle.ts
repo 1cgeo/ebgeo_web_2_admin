@@ -1,7 +1,7 @@
 // Path: hooks\usePageTitle.ts
 import { useEffect } from 'react';
 
-import { useGlobal } from '@/context/GlobalContext';
+import { useGlobal } from '@/hooks/useGlobal';
 
 export const usePageTitle = (title: string) => {
   const { dispatch } = useGlobal();

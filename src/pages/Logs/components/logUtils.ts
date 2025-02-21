@@ -1,5 +1,5 @@
 // Path: pages\Logs\components\logUtils.ts
-import { PinoLevel } from '@/types/logs';
+import type { PinoLevel } from '@/types/logs';
 
 export function getLevelColor(
   level: PinoLevel,

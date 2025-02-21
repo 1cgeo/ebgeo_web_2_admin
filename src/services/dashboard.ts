@@ -1,5 +1,5 @@
 // Path: services\dashboard.ts
-import { SystemHealth, SystemMetrics } from '@/types/admin';
+import type { SystemHealth, SystemMetrics } from '@/types/admin';
 
 import { api } from './api';
 

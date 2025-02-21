@@ -3,7 +3,7 @@ import { Backdrop, CircularProgress } from '@mui/material';
 
 import React from 'react';
 
-import { useGlobal } from '@/context/GlobalContext';
+import { useGlobal } from '@/hooks/useGlobal';
 
 export const PageLoader: React.FC = () => {
   const { state } = useGlobal();

@@ -5,22 +5,14 @@ import 'slick-carousel/slick/slick.css';
 
 import Slider from 'react-slick';
 
-import amazonia from '@/assets/images/satellite/amazonia.png';
-import brasilia from '@/assets/images/satellite/brasilia.png';
-import luiz_eduardo from '@/assets/images/satellite/luiz_eduardo.png';
-import montanhas from '@/assets/images/satellite/montanhas.png';
-import rio from '@/assets/images/satellite/rio.png';
-import santos from '@/assets/images/satellite/santos.png';
-import uruguaiana from '@/assets/images/satellite/uruguaiana.png';
-
 const SATELLITE_IMAGES = [
-  montanhas,
-  rio,
-  brasilia,
-  santos,
-  amazonia,
-  luiz_eduardo,
-  uruguaiana,
+  '/images/satellite/montanhas.png',
+  '/images/satellite/rio.png',
+  '/images/satellite/brasilia.png',
+  '/images/satellite/santos.png',
+  '/images/satellite/amazonia.png',
+  '/images/satellite/luiz_eduardo.png',
+  '/images/satellite/uruguaiana.png',
 ];
 
 export const BackgroundSlider = () => {

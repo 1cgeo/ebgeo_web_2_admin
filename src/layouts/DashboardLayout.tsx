@@ -33,8 +33,8 @@ import { Link, Outlet } from 'react-router-dom';
 
 import { ProfileButton } from '@/components/Profile/ProfileButton';
 
-import { useAuth } from '@/context/AuthContext';
-import { useTheme as useAppTheme } from '@/context/ThemeContext';
+import { useAuth } from '@/hooks/useAuth';
+import { useTheme as useAppTheme } from '@/hooks/useTheme';
 
 const drawerWidth = 240;
 

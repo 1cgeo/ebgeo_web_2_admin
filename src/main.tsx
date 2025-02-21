@@ -12,14 +12,20 @@ import { RouterProvider } from 'react-router-dom';
 import { ErrorBoundary } from '@/components/Feedback/ErrorBoundary';
 import { PageLoader } from '@/components/Feedback/PageLoader';
 
-import { AuthProvider } from '@/context/AuthContext';
-import { GlobalProvider } from '@/context/GlobalContext';
-import { ThemeProvider } from '@/context/ThemeContext';
+import { AuthProvider } from '@/providers/AuthProvider';
+import { GlobalProvider } from '@/providers/GlobalProvider';
+import { ThemeProvider } from '@/providers/ThemeProvider';
 
 import './index.css';
 import { router } from './routes';
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+const rootElement = document.getElementById('root');
+
+if (!rootElement) {
+  throw new Error('Failed to find root element');
+}
+
+ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ErrorBoundary>
       <AuthProvider>

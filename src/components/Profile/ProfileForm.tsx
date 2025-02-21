@@ -14,9 +14,8 @@ import { useSnackbar } from 'notistack';
 
 import React, { useState } from 'react';
 
-import { useAuth } from '@/context/AuthContext';
-
 import { useApi } from '@/hooks/useApi';
+import { useAuth } from '@/hooks/useAuth';
 import { useForm } from '@/hooks/useForm';
 
 import { api } from '@/services/api';
@@ -135,7 +134,7 @@ export const ProfileForm: React.FC<ProfileFormProps> = ({ onSuccess }) => {
     const syntheticEvent = {
       target: {
         name: field,
-        value: value,
+        value,
       },
     } as React.ChangeEvent<HTMLInputElement>;
 

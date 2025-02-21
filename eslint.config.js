@@ -1,33 +1,51 @@
-const typescript = require('@typescript-eslint/eslint-plugin')
-const parser = require('@typescript-eslint/parser')
-const react = require('eslint-plugin-react')
-const hooks = require('eslint-plugin-react-hooks')
+import js from '@eslint/js'
+import globals from 'globals'
+import reactHooks from 'eslint-plugin-react-hooks'
+import reactRefresh from 'eslint-plugin-react-refresh'
+import tseslint from 'typescript-eslint'
 
-module.exports = [
+export default tseslint.config(
+  { ignores: ['dist'] },
   {
-    files: ['src/**/*.{ts,tsx}'],
+    files: ['**/*.{ts,tsx}'],
     languageOptions: {
-      parser,
+      ecmaVersion: 2020,
+      sourceType: 'module',
+      parser: tseslint.parser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
         project: './tsconfig.json'
       }
     },
     plugins: {
-      '@typescript-eslint': typescript,
-      'react': react,
-      'react-hooks': hooks
+      '@typescript-eslint': tseslint.plugin,
+      'react-hooks': reactHooks,
+      'react-refresh': reactRefresh
     },
     rules: {
-      'react/react-in-jsx-scope': 'off',
+      // React Query rules
+      'react-hooks/exhaustive-deps': 'warn',
+      'react-hooks/rules-of-hooks': 'error',
+      
+      // TypeScript rules
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['warn', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_'
       }],
-      'react-hooks/rules-of-hooks': 'error',
-      'react-hooks/exhaustive-deps': 'warn'
+      '@typescript-eslint/consistent-type-imports': 'error',
+      '@typescript-eslint/no-non-null-assertion': 'warn',
+      
+      // React Refresh
+      'react-refresh/only-export-components': [
+        'warn',
+        { allowConstantExport: true }
+      ],
+      
+      // Custom rules for our stack
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'prefer-const': 'error',
+      'no-var': 'error',
+      'object-shorthand': 'error'
     }
   }
-]
+)

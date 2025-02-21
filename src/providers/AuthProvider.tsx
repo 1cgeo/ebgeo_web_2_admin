@@ -1,46 +1,26 @@
-// Path: context\AuthContext.tsx
-import React, { createContext, useContext, useEffect, useReducer } from 'react';
+// Path: providers\AuthProvider.tsx
+import React, { useEffect, useReducer } from 'react';
 
+import { AuthContext } from '@/contexts/AuthContext';
+import type { AuthContextData, AuthUser } from '@/contexts/AuthContext';
 import { api } from '@/services/api';
 
-interface User {
-  id: string;
-  username: string;
-  email: string;
-  nome_completo?: string;
-  nome_guerra?: string;
-  organizacao_militar?: string;
-  role: 'admin' | 'user';
-}
-
-interface AuthState {
-  user: User | null;
-  token: string | null;
-  loading: boolean;
-  isAuthenticated: boolean;
-}
-
 type AuthAction =
-  | { type: 'LOGIN'; payload: { user: User; token: string } }
+  | { type: 'LOGIN'; payload: { user: AuthUser; token: string } }
   | { type: 'LOGOUT' }
   | { type: 'SET_LOADING'; payload: boolean };
 
-interface AuthContextData extends AuthState {
-  login: (user: User, token: string) => void;
-  logout: () => void;
-  setLoading: (loading: boolean) => void;
-}
-
-const AuthContext = createContext<AuthContextData | undefined>(undefined);
-
-const initialState: AuthState = {
+const initialState: Omit<AuthContextData, 'login' | 'logout' | 'setLoading'> = {
   user: null,
   token: localStorage.getItem('token'),
   loading: false,
   isAuthenticated: false,
 };
 
-function authReducer(state: AuthState, action: AuthAction): AuthState {
+function authReducer(
+  state: typeof initialState,
+  action: AuthAction,
+): typeof initialState {
   switch (action.type) {
     case 'LOGIN':
       return {
@@ -66,7 +46,9 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
   }
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
@@ -93,7 +75,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     initializeAuth();
   }, []);
 
-  const login = (user: User, token: string) => {
+  const login = (user: AuthUser, token: string) => {
     localStorage.setItem('token', token);
     dispatch({ type: 'LOGIN', payload: { user, token } });
   };
@@ -112,12 +94,4 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-}
+};

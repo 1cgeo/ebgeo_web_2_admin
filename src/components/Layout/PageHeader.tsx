@@ -4,7 +4,7 @@ import { Box, Breadcrumbs, Link, Typography } from '@mui/material';
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
-import { useGlobal } from '@/context/GlobalContext';
+import { useGlobal } from '@/hooks/useGlobal';
 
 export interface PageHeaderProps {
   title: string;

@@ -6,7 +6,7 @@ import { Navigate } from 'react-router-dom';
 import { BackgroundSlider } from '@/components/Login/BackgroundSlider';
 import { LoginForm } from '@/components/Login/LoginForm';
 
-import { useAuth } from '@/context/AuthContext';
+import { useAuth } from '@/hooks/useAuth';
 
 const LoginPage = () => {
   const theme = useTheme();

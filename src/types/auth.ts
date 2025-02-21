@@ -1,15 +1,12 @@
 // Path: types\auth.ts
+import type { AuthUser } from '@/contexts/AuthContext';
+
 export interface LoginCredentials {
   username: string;
   password: string;
 }
 
 export interface LoginResponse {
-  user: {
-    id: string;
-    username: string;
-    email: string;
-    role: 'admin' | 'user';
-  };
+  user: AuthUser;
   token: string;
 }

@@ -1,6 +1,7 @@
 // Path: components\Loading\DashboardSkeleton.tsx
 import { Box, Skeleton } from '@mui/material';
-import { Paper, Theme, styled } from '@mui/material';
+import type { Theme } from '@mui/material';
+import { Paper, styled } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 const Item = styled(Paper)(({ theme }: { theme: Theme }) => ({

@@ -1,5 +1,6 @@
 // Path: services\auth.ts
-import axios, { AxiosError } from 'axios';
+import type { AxiosError } from 'axios';
+import axios from 'axios';
 
 import type { LoginCredentials, LoginResponse } from '@/types/auth';
 

@@ -10,12 +10,12 @@ import {
   Storage as StorageIcon,
   Timer as TimerIcon,
 } from '@mui/icons-material';
+import type { Theme } from '@mui/material';
 import {
   Alert,
   Box,
   CircularProgress,
   Paper,
-  Theme,
   Typography,
   styled,
 } from '@mui/material';
@@ -25,7 +25,7 @@ import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { MetricCard } from '@/components/DataDisplay/MetricCard';
 import { PageHeader } from '@/components/Layout/PageHeader';
 
-import {
+import type {
   DatabaseConnectionsProps,
   ModelsDistributionProps,
   ServiceHealthCardProps,

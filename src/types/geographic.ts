@@ -1,5 +1,5 @@
 // Path: types\geographic.ts
-import { Geometry } from 'geojson';
+import type { Geometry } from 'geojson';
 
 export interface ZoneListResponse {
   zones: ZoneWithStats[];

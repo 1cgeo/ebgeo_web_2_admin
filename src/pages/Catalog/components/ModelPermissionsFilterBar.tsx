@@ -1,11 +1,6 @@
 // Path: pages\Catalog\components\ModelPermissionsFilterBar.tsx
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-} from '@mui/material';
+import type { SelectChangeEvent } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import Grid from '@mui/material/Grid2';
 
 import React, { useCallback } from 'react';

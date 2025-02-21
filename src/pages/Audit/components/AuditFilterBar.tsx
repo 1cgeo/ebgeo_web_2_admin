@@ -1,5 +1,6 @@
 // Path: pages\Audit\components\AuditFilterBar.tsx
 import { Clear as ClearIcon } from '@mui/icons-material';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Box,
   Button,
@@ -7,7 +8,6 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
@@ -17,7 +17,8 @@ import React from 'react';
 import { FilterBar } from '@/components/Form/FilterBar';
 import { SearchField } from '@/components/Form/SearchField';
 
-import { AuditAction, auditActionLabels } from '@/types/audit';
+import type { AuditAction } from '@/types/audit';
+import { auditActionLabels } from '@/types/audit';
 
 interface AuditFilterBarProps {
   search: string;

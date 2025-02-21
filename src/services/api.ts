@@ -1,9 +1,32 @@
 // Path: services\api.ts
-import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import type { AxiosError, InternalAxiosRequestConfig } from 'axios';
+import axios from 'axios';
 
 interface ApiErrorResponse {
   message?: string;
   details?: Record<string, unknown>;
+}
+
+export type NetworkErrorCode =
+  | 'TIMEOUT'
+  | 'DNS'
+  | 'SSL'
+  | 'NETWORK'
+  | 'AUTH'
+  | 'CSP'
+  | 'SERVER_ERROR'
+  | 'VALIDATION'
+  | 'NOT_FOUND';
+
+export class ApiError extends Error {
+  constructor(
+    message: string,
+    public code: NetworkErrorCode,
+    public details?: Record<string, unknown>,
+  ) {
+    super(message);
+    this.name = 'ApiError';
+  }
 }
 
 export class CSPError extends Error {
@@ -32,31 +55,81 @@ api.interceptors.request.use(
   },
 );
 
+// Response interceptor
 api.interceptors.response.use(
   response => response,
   async (error: AxiosError<ApiErrorResponse>) => {
+    // Handle connection/network errors
+    if (!error.response) {
+      if (error.code === 'ECONNABORTED') {
+        throw new ApiError('Tempo limite de conexão excedido', 'TIMEOUT');
+      }
+      if (error.code === 'ERR_NAME_NOT_RESOLVED') {
+        throw new ApiError('Erro de resolução DNS', 'DNS');
+      }
+      if (error.code === 'CERT_HAS_EXPIRED') {
+        throw new ApiError('Erro de certificado SSL', 'SSL');
+      }
+      throw new ApiError('Erro de conexão com o servidor', 'NETWORK');
+    }
+
+    const status = error.response.status;
+    const data = error.response.data;
     const isLoginRequest = error.config?.url?.includes('/auth/login');
 
-    if (error.response?.status === 401 && !isLoginRequest) {
+    // Authentication errors
+    if (status === 401 && !isLoginRequest) {
       localStorage.removeItem('token');
       window.location.href = '/login';
+      throw new ApiError('Sessão expirada', 'AUTH');
     }
 
-    // Handle loss of admin privileges
-    if (error.response?.status === 403) {
+    // Authorization errors
+    if (status === 403) {
       localStorage.removeItem('token');
       window.location.href = '/login?error=forbidden';
+      throw new ApiError('Acesso negado', 'AUTH');
     }
 
-    if (error.response?.status === 429) {
-      localStorage.removeItem('token');
+    // Rate limiting
+    if (status === 429) {
       window.location.href = '/login?error=ratelimit';
+      throw new ApiError('Limite de requisições excedido', 'AUTH');
     }
 
-    return Promise.reject(error);
+    // Validation errors
+    if (status === 422 || status === 400) {
+      const message = data?.details
+        ? Object.values(data.details).flat().join(', ')
+        : data?.message || 'Erro de validação';
+      throw new ApiError(message, 'VALIDATION', data?.details);
+    }
+
+    // Not found
+    if (status === 404) {
+      throw new ApiError(
+        data?.message || 'Recurso não encontrado',
+        'NOT_FOUND',
+      );
+    }
+
+    // Server errors
+    if (status >= 500) {
+      throw new ApiError(
+        'Erro interno do servidor. Tente novamente mais tarde.',
+        'SERVER_ERROR',
+      );
+    }
+
+    // Generic errors
+    throw new ApiError(
+      data?.message || 'Ocorreu um erro inesperado',
+      'NETWORK',
+    );
   },
 );
 
+// Helper function to extract error message from login errors
 export const handleAuthError = (navigate: (path: string) => void) => {
   const urlParams = new URLSearchParams(window.location.search);
   const error = urlParams.get('error');
@@ -68,7 +141,7 @@ export const handleAuthError = (navigate: (path: string) => void) => {
 
   if (error === 'ratelimit') {
     navigate('/login');
-    return 'Limite de requisições excedido. Por favor, aguarde alguns minutos antes de tentar novamente.';
+    return 'Limite de requisições excedido. Por favor, aguarde alguns minutos.';
   }
 
   return null;

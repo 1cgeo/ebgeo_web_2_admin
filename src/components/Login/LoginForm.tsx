@@ -19,8 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { LoadingDot } from '@/components/Animations/LoadingDot';
 import { PageTransition } from '@/components/Animations/PageTransition';
 
-import { useAuth } from '@/context/AuthContext';
-
+import { useAuth } from '@/hooks/useAuth';
 import { useForm } from '@/hooks/useForm';
 import { useHapticFeedback } from '@/hooks/useHapticFeedback';
 
