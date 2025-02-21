@@ -1,13 +1,22 @@
-import { useState, useCallback, useEffect } from 'react';
-import { catalogService } from '@/services/catalog';
+// Path: pages\Catalog\hooks\useModelPermissions.ts
+import { useCallback, useEffect, useState } from 'react';
+
 import { useDebounce } from '@/hooks/useDebounce';
-import type { 
-  ModelPermissionsSummary, 
+
+import { catalogService } from '@/services/catalog';
+import type {
+  ModelAccessLevel,
+  ModelPermissionsSummary,
   UpdateModelPermissionsRequest,
-  ModelAccessLevel
 } from '@/types/catalog';
 
-type SortableFields = 'model_name' | 'model_type' | 'data_carregamento' | 'access_level' | 'user_count' | 'group_count';
+type SortableFields =
+  | 'model_name'
+  | 'model_type'
+  | 'data_carregamento'
+  | 'access_level'
+  | 'user_count'
+  | 'group_count';
 
 export function useModelPermissions() {
   const [page, setPage] = useState(0);
@@ -19,7 +28,9 @@ export function useModelPermissions() {
   const [search, setSearch] = useState('');
   const [sortField, setSortField] = useState<SortableFields>('model_name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
-  const [accessLevelFilter, setAccessLevelFilter] = useState<ModelAccessLevel | ''>('');
+  const [accessLevelFilter, setAccessLevelFilter] = useState<
+    ModelAccessLevel | ''
+  >('');
   const [typeFilter, setTypeFilter] = useState<string>('');
 
   const debouncedSearch = useDebounce(search, 300);
@@ -38,14 +49,14 @@ export function useModelPermissions() {
         sort: sortField,
         order: sortOrder,
         access_level: accessLevelFilter || undefined,
-        model_type: typeFilter || undefined
+        model_type: typeFilter || undefined,
       };
 
       const response = await catalogService.listPermissions(params);
 
       const formattedModels = response.models.map(model => ({
         ...model,
-        data_carregamento: new Date(model.data_carregamento)
+        data_carregamento: new Date(model.data_carregamento),
       }));
 
       setModels(formattedModels);
@@ -56,7 +67,15 @@ export function useModelPermissions() {
     } finally {
       setLoading(false);
     }
-  }, [page, rowsPerPage, debouncedSearch, sortField, sortOrder, accessLevelFilter, typeFilter]);
+  }, [
+    page,
+    rowsPerPage,
+    debouncedSearch,
+    sortField,
+    sortOrder,
+    accessLevelFilter,
+    typeFilter,
+  ]);
 
   useEffect(() => {
     fetchModelPermissions();
@@ -66,7 +85,9 @@ export function useModelPermissions() {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -98,7 +119,10 @@ export function useModelPermissions() {
     return catalogService.getPermissions(modelId);
   };
 
-  const updateModelPermissions = async (modelId: string, data: UpdateModelPermissionsRequest) => {
+  const updateModelPermissions = async (
+    modelId: string,
+    data: UpdateModelPermissionsRequest,
+  ) => {
     await catalogService.updatePermissions(modelId, data);
   };
 
@@ -122,6 +146,6 @@ export function useModelPermissions() {
     handleSort,
     handleAccessLevelFilter,
     handleTypeFilter,
-    refetchPermissions: fetchModelPermissions
+    refetchPermissions: fetchModelPermissions,
   };
 }

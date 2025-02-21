@@ -1,3 +1,4 @@
+// Path: types\geographic.ts
 import { Geometry } from 'geojson';
 
 export interface ZoneListResponse {

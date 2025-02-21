@@ -1,6 +1,9 @@
-import React, { memo } from 'react';
-import { SearchField } from '@/components/Form/SearchField';
+// Path: pages\Catalog\components\MemorizedSearchField.tsx
 import { FormHelperText } from '@mui/material';
+
+import React, { memo } from 'react';
+
+import { SearchField } from '@/components/Form/SearchField';
 
 interface MemorizedSearchFieldProps {
   value: string;
@@ -15,7 +18,7 @@ export const MemorizedSearchField = memo(function MemorizedSearchField({
   onChange,
   onClear,
   disabled,
-  placeholder = 'Buscar modelos...'
+  placeholder = 'Buscar modelos...',
 }: MemorizedSearchFieldProps) {
   const showHelper = value.length > 0 && value.length < 3;
 

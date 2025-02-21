@@ -1,4 +1,6 @@
-import { useState, useEffect } from 'react';
+// Path: pages\Dashboard\hooks\useDashboard.ts
+import { useEffect, useState } from 'react';
+
 import { dashboardService } from '@/services/dashboard';
 import type { SystemHealth, SystemMetrics } from '@/types/admin';
 
@@ -14,7 +16,7 @@ export const useDashboard = () => {
         setIsLoading(true);
         const [health, metrics] = await Promise.all([
           dashboardService.getHealth(),
-          dashboardService.getMetrics()
+          dashboardService.getMetrics(),
         ]);
         setHealthData(health);
         setMetricsData(metrics);
@@ -30,7 +32,7 @@ export const useDashboard = () => {
     const healthInterval = setInterval(() => {
       dashboardService.getHealth().then(setHealthData);
     }, 30000);
-    
+
     const metricsInterval = setInterval(() => {
       dashboardService.getMetrics().then(setMetricsData);
     }, 60000);

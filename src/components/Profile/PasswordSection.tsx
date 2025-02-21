@@ -1,15 +1,17 @@
-import React, { useState } from 'react';
+// Path: components\Profile\PasswordSection.tsx
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
   Box,
-  TextField,
+  Collapse,
   FormControl,
   FormHelperText,
   IconButton,
   InputAdornment,
+  TextField,
   Typography,
-  Collapse
 } from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+
+import React, { useState } from 'react';
 
 interface PasswordSectionProps {
   currentPassword: string;
@@ -30,7 +32,7 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
   confirmPassword,
   errors,
   onChange,
-  expanded
+  expanded,
 }) => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
@@ -50,7 +52,9 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
     }
   };
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>,
+  ) => {
     event.preventDefault();
   };
 
@@ -66,7 +70,7 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
             label="Senha Atual"
             type={showCurrentPassword ? 'text' : 'password'}
             value={currentPassword}
-            onChange={(e) => onChange('currentPassword', e.target.value)}
+            onChange={e => onChange('currentPassword', e.target.value)}
             error={Boolean(errors.currentPassword)}
             InputProps={{
               endAdornment: (
@@ -92,7 +96,7 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
             label="Nova Senha"
             type={showNewPassword ? 'text' : 'password'}
             value={newPassword}
-            onChange={(e) => onChange('newPassword', e.target.value)}
+            onChange={e => onChange('newPassword', e.target.value)}
             error={Boolean(errors.newPassword)}
             InputProps={{
               endAdornment: (
@@ -112,7 +116,8 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
             <FormHelperText error>{errors.newPassword}</FormHelperText>
           )}
           <FormHelperText>
-            A senha deve ter no mínimo 8 caracteres, incluir maiúsculas, minúsculas, números e caracteres especiais
+            A senha deve ter no mínimo 8 caracteres, incluir maiúsculas,
+            minúsculas, números e caracteres especiais
           </FormHelperText>
         </FormControl>
 
@@ -121,7 +126,7 @@ export const PasswordSection: React.FC<PasswordSectionProps> = ({
             label="Confirmar Nova Senha"
             type={showConfirmPassword ? 'text' : 'password'}
             value={confirmPassword}
-            onChange={(e) => onChange('confirmPassword', e.target.value)}
+            onChange={e => onChange('confirmPassword', e.target.value)}
             error={Boolean(errors.confirmPassword)}
             InputProps={{
               endAdornment: (

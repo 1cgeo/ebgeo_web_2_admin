@@ -1,5 +1,8 @@
-import React from 'react';
+// Path: components\DataDisplay\DataTable.tsx
 import {
+  Checkbox,
+  LinearProgress,
+  Paper,
   Table,
   TableBody,
   TableCell,
@@ -8,10 +11,10 @@ import {
   TablePagination,
   TableRow,
   TableSortLabel,
-  Checkbox,
-  Paper,
-  LinearProgress
 } from '@mui/material';
+
+import React from 'react';
+
 import { EmptyState } from '@/components/Feedback/EmptyState';
 
 export interface DataItem {
@@ -66,7 +69,7 @@ export function DataTable<T extends DataItem>({
   onSelectAll,
   onSelect,
   onPageChange,
-  onRowsPerPageChange
+  onRowsPerPageChange,
 }: DataTableProps<T>) {
   if (data.length === 0 && !loading && emptyState) {
     return (
@@ -87,29 +90,33 @@ export function DataTable<T extends DataItem>({
             top: 0,
             left: 0,
             right: 0,
-            zIndex: 1
+            zIndex: 1,
           }}
         />
       )}
 
       <TableContainer>
-        <Table sx={{
-          '& .MuiTableRow-root:hover': {
-            bgcolor: 'action.hover'
-          }
-        }}>
+        <Table
+          sx={{
+            '& .MuiTableRow-root:hover': {
+              bgcolor: 'action.hover',
+            },
+          }}
+        >
           <TableHead>
             <TableRow>
               {selectable && (
                 <TableCell padding="checkbox">
                   <Checkbox
-                    indeterminate={selected.length > 0 && selected.length < data.length}
+                    indeterminate={
+                      selected.length > 0 && selected.length < data.length
+                    }
                     checked={data.length > 0 && selected.length === data.length}
                     onChange={onSelectAll}
                   />
                 </TableCell>
               )}
-              {columns.map((column) => (
+              {columns.map(column => (
                 <TableCell
                   key={String(column.id)}
                   align={column.align}
@@ -131,7 +138,7 @@ export function DataTable<T extends DataItem>({
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row) => (
+            {data.map(row => (
               <TableRow
                 hover
                 key={row.id}
@@ -145,11 +152,13 @@ export function DataTable<T extends DataItem>({
                     />
                   </TableCell>
                 )}
-                {columns.map((column) => {
+                {columns.map(column => {
                   const value = row[column.id];
                   return (
                     <TableCell key={String(column.id)} align={column.align}>
-                      {column.format ? column.format(value, row) : value as React.ReactNode}
+                      {column.format
+                        ? column.format(value, row)
+                        : (value as React.ReactNode)}
                     </TableCell>
                   );
                 })}

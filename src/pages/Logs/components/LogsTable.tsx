@@ -1,21 +1,25 @@
-import React from 'react';
-import { 
-  Paper, 
-  Table, 
-  TableBody, 
-  TableCell, 
-  TableContainer, 
-  TableHead, 
-  TableRow,
+// Path: pages\Logs\components\LogsTable.tsx
+import { Visibility } from '@mui/icons-material';
+import {
+  Box,
   Chip,
   IconButton,
-  Box,
   LinearProgress,
-  Typography
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
 } from '@mui/material';
-import { Visibility } from '@mui/icons-material';
-import type { LogEntry  } from '@/types/logs';
-import { getLevelColor, getLevelLabel, formatDate } from './logUtils';
+
+import React from 'react';
+
+import type { LogEntry } from '@/types/logs';
+
+import { formatDate, getLevelColor, getLevelLabel } from './logUtils';
 
 interface LogsTableProps {
   logs: LogEntry[];
@@ -26,7 +30,7 @@ interface LogsTableProps {
 export const LogsTable: React.FC<LogsTableProps> = ({
   logs,
   loading = false,
-  onViewDetails
+  onViewDetails,
 }) => {
   if (logs.length === 0 && !loading) {
     return (
@@ -47,11 +51,11 @@ export const LogsTable: React.FC<LogsTableProps> = ({
             top: 0,
             left: 0,
             right: 0,
-            zIndex: 1
+            zIndex: 1,
           }}
         />
       )}
-      
+
       <Table>
         <TableHead>
           <TableRow>
@@ -65,14 +69,14 @@ export const LogsTable: React.FC<LogsTableProps> = ({
         <TableBody>
           {logs.map((log, index) => {
             const time = log.time || log.timestamp;
-            
+
             return (
               <TableRow
                 key={`${time}-${index}`}
                 sx={{
                   '&:hover': {
-                    backgroundColor: 'action.hover'
-                  }
+                    backgroundColor: 'action.hover',
+                  },
                 }}
               >
                 <TableCell sx={{ whiteSpace: 'nowrap' }}>
@@ -87,11 +91,13 @@ export const LogsTable: React.FC<LogsTableProps> = ({
                 </TableCell>
                 <TableCell>{log.category}</TableCell>
                 <TableCell sx={{ maxWidth: 400 }}>
-                  <Box sx={{ 
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis',
-                    whiteSpace: 'nowrap'
-                  }}>
+                  <Box
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
                     {log.msg || log.message || 'Sem mensagem'}
                   </Box>
                 </TableCell>

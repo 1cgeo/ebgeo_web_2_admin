@@ -1,28 +1,45 @@
-import { Box, Alert, Paper, styled, Theme, Typography, CircularProgress } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { PageHeader } from '@/components/Layout/PageHeader';
-import { MetricCard } from '@/components/DataDisplay/MetricCard';
-import { PieChart, Pie, ResponsiveContainer, Cell, Tooltip } from 'recharts';
-import { 
-  Storage as StorageIcon,
-  Group as GroupIcon,
-  CloudQueue as CloudIcon,
-  Security as SecurityIcon,
+// Path: pages\Dashboard\DashboardContent.tsx
+import {
   Api as ApiIcon,
-  Timer as TimerIcon,
+  CloudQueue as CloudIcon,
   Code as CodeIcon,
   Dns as DnsIcon,
+  Group as GroupIcon,
   HourglassTop as HourglassIcon,
+  Security as SecurityIcon,
+  Storage as StorageIcon,
+  Timer as TimerIcon,
 } from '@mui/icons-material';
+import {
+  Alert,
+  Box,
+  CircularProgress,
+  Paper,
+  Theme,
+  Typography,
+  styled,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
+
+import { MetricCard } from '@/components/DataDisplay/MetricCard';
+import { PageHeader } from '@/components/Layout/PageHeader';
+
+import {
+  DatabaseConnectionsProps,
+  ModelsDistributionProps,
+  ServiceHealthCardProps,
+  SystemResourcesProps,
+} from '@/types/admin';
+
 import { useDashboard } from './hooks/useDashboard';
-import {ServiceHealthCardProps, DatabaseConnectionsProps, ModelsDistributionProps, SystemResourcesProps } from '@/types/admin'
 
 const Item = styled(Paper)(({ theme }: { theme: Theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
   ...theme.typography.body2,
   padding: theme.spacing(3),
   borderRadius: theme.shape.borderRadius,
-  height: '100%'
+  height: '100%',
 }));
 
 const formatUptime = (seconds: number): string => {
@@ -37,10 +54,12 @@ const formatBytes = (bytes: number): string => {
   return `${gb.toFixed(1)} GB`;
 };
 
-const DatabaseConnectionsChart: React.FC<DatabaseConnectionsProps> = ({ data }) => {
+const DatabaseConnectionsChart: React.FC<DatabaseConnectionsProps> = ({
+  data,
+}) => {
   const chartData = [
     { name: 'Ativas', value: data.active, color: '#4caf50' },
-    { name: 'Ociosas', value: data.idle, color: '#ff9800' }
+    { name: 'Ociosas', value: data.idle, color: '#ff9800' },
   ];
 
   return (
@@ -72,10 +91,12 @@ const DatabaseConnectionsChart: React.FC<DatabaseConnectionsProps> = ({ data }) 
   );
 };
 
-const ModelsDistributionChart: React.FC<ModelsDistributionProps> = ({ data }) => {
+const ModelsDistributionChart: React.FC<ModelsDistributionProps> = ({
+  data,
+}) => {
   const chartData = [
     { name: 'Públicos', value: data.public, color: '#2196f3' },
-    { name: 'Privados', value: data.private, color: '#f44336' }
+    { name: 'Privados', value: data.private, color: '#f44336' },
   ];
 
   return (
@@ -109,7 +130,7 @@ const ModelsDistributionChart: React.FC<ModelsDistributionProps> = ({ data }) =>
 
 const SystemResourcesChart: React.FC<SystemResourcesProps> = ({ data }) => {
   const memoryUsagePercent = (data.memory.used / data.memory.total) * 100;
-  
+
   return (
     <Box>
       <Grid container spacing={3} alignItems="center">
@@ -125,9 +146,7 @@ const SystemResourcesChart: React.FC<SystemResourcesProps> = ({ data }) => {
               thickness={6}
               sx={{ mb: 1 }}
             />
-            <Typography variant="h6">
-              {Math.round(data.cpu.usage)}%
-            </Typography>
+            <Typography variant="h6">{Math.round(data.cpu.usage)}%</Typography>
           </Box>
         </Grid>
         <Grid size={{ xs: 12, sm: 6 }}>
@@ -152,13 +171,24 @@ const SystemResourcesChart: React.FC<SystemResourcesProps> = ({ data }) => {
   );
 };
 
-const ServiceHealthCard = ({ status, name, icon, lastCheck }: ServiceHealthCardProps) => (
+const ServiceHealthCard = ({
+  status,
+  name,
+  icon,
+  lastCheck,
+}: ServiceHealthCardProps) => (
   <MetricCard
     title={name}
     value={status}
     icon={icon}
     subtitle={lastCheck?.toLocaleString()}
-    severity={status === 'healthy' ? 'success' : status === 'degraded' ? 'warning' : 'error'}
+    severity={
+      status === 'healthy'
+        ? 'success'
+        : status === 'degraded'
+          ? 'warning'
+          : 'error'
+    }
   />
 );
 
@@ -179,10 +209,7 @@ const DashboardContent = () => {
 
   return (
     <Box>
-      <PageHeader 
-        title="Dashboard"
-        subtitle="Visão geral do sistema"
-      />
+      <PageHeader title="Dashboard" subtitle="Visão geral do sistema" />
 
       <Box sx={{ flexGrow: 1 }}>
         <Grid container spacing={3}>
@@ -193,7 +220,13 @@ const DashboardContent = () => {
                 title="Status do Sistema"
                 value={healthData.status}
                 icon={<DnsIcon />}
-                severity={healthData.status === 'healthy' ? 'success' : healthData.status === 'degraded' ? 'warning' : 'error'}
+                severity={
+                  healthData.status === 'healthy'
+                    ? 'success'
+                    : healthData.status === 'degraded'
+                      ? 'warning'
+                      : 'error'
+                }
               />
             </Item>
           </Grid>
@@ -270,7 +303,9 @@ const DashboardContent = () => {
           {/* Recursos do Sistema */}
           <Grid size={{ xs: 12, md: 8 }}>
             <Item>
-              <Typography variant="h6" gutterBottom>Recursos do Sistema</Typography>
+              <Typography variant="h6" gutterBottom>
+                Recursos do Sistema
+              </Typography>
               <SystemResourcesChart data={metricsData.system} />
             </Item>
           </Grid>
@@ -278,8 +313,12 @@ const DashboardContent = () => {
           {/* Conexões de Banco */}
           <Grid size={{ xs: 12, md: 4 }}>
             <Item>
-              <Typography variant="h6" gutterBottom>Conexões de Banco</Typography>
-              <DatabaseConnectionsChart data={metricsData.database.connectionPool} />
+              <Typography variant="h6" gutterBottom>
+                Conexões de Banco
+              </Typography>
+              <DatabaseConnectionsChart
+                data={metricsData.database.connectionPool}
+              />
             </Item>
           </Grid>
 
@@ -314,7 +353,9 @@ const DashboardContent = () => {
           </Grid>
           <Grid size={{ xs: 12, sm: 6, md: 3 }}>
             <Item>
-              <Typography variant="h6" gutterBottom>Distribuição de Modelos</Typography>
+              <Typography variant="h6" gutterBottom>
+                Distribuição de Modelos
+              </Typography>
               <ModelsDistributionChart data={metricsData.usage.totalModels} />
             </Item>
           </Grid>

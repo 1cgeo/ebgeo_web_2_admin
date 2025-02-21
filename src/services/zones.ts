@@ -1,12 +1,14 @@
-import { api } from './api';
+// Path: services\zones.ts
 import type {
-  ZoneWithStats,
-  ZonePermissions,
   CreateZoneRequest,
   UpdateZonePermissionsRequest,
   ZoneListParams,
-  ZoneListResponse
+  ZoneListResponse,
+  ZonePermissions,
+  ZoneWithStats,
 } from '@/types/geographic';
+
+import { api } from './api';
 
 export const zonesService = {
   async list(params: ZoneListParams): Promise<ZoneListResponse> {
@@ -15,8 +17,8 @@ export const zonesService = {
       ...data,
       zones: data.zones.map((zone: ZoneWithStats) => ({
         ...zone,
-        created_at: new Date(zone.created_at)
-      }))
+        created_at: new Date(zone.created_at),
+      })),
     };
   },
 
@@ -24,7 +26,7 @@ export const zonesService = {
     const { data } = await api.get(`/api/geographic/zones/${id}`);
     return {
       ...data,
-      created_at: new Date(data.created_at)
+      created_at: new Date(data.created_at),
     };
   },
 
@@ -32,7 +34,7 @@ export const zonesService = {
     const { data } = await api.post('/api/geographic/zones', zoneData);
     return {
       ...data,
-      created_at: new Date(data.created_at)
+      created_at: new Date(data.created_at),
     };
   },
 
@@ -45,7 +47,10 @@ export const zonesService = {
     return data;
   },
 
-  async updatePermissions(id: string, permissions: UpdateZonePermissionsRequest): Promise<void> {
+  async updatePermissions(
+    id: string,
+    permissions: UpdateZonePermissionsRequest,
+  ): Promise<void> {
     await api.put(`/api/geographic/zones/${id}/permissions`, permissions);
-  }
+  },
 };

@@ -1,10 +1,20 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+// Path: pages\Groups\components\GroupDialog.tsx
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
+} from '@mui/material';
 import { Autocomplete } from '@mui/material';
-import { usersService } from '@/services/users';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { groupsService } from '@/services/groups';
-import type { User } from '@/types/users';
+import { usersService } from '@/services/users';
 import type { GroupFormData } from '@/types/groups';
+import type { User } from '@/types/users';
 
 interface GroupDialogProps {
   open: boolean;
@@ -17,7 +27,7 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
   open,
   groupId,
   onClose,
-  onSubmit
+  onSubmit,
 }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -36,7 +46,7 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
 
   const fetchGroupDetails = useCallback(async () => {
     if (!groupId) return;
-    
+
     try {
       setLoading(true);
       const group = await groupsService.getDetails(groupId);
@@ -47,7 +57,7 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
         group.members.map(async member => {
           const userDetails = await usersService.getDetails(member.id);
           return userDetails;
-        })
+        }),
       );
 
       setSelectedUsers(memberUsers);
@@ -76,23 +86,23 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
     onSubmit({
       name,
       description,
-      userIds: selectedUsers.map(user => user.id)
+      userIds: selectedUsers.map(user => user.id),
     });
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="sm"
       fullWidth
       PaperProps={{
         component: 'form',
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
       }}
     >
       <DialogTitle>{groupId ? 'Editar Grupo' : 'Novo Grupo'}</DialogTitle>
-      
+
       <DialogContent>
         <TextField
           autoFocus
@@ -101,9 +111,9 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
           fullWidth
           required
           value={name}
-          onChange={(e) => setName(e.target.value)}
+          onChange={e => setName(e.target.value)}
         />
-        
+
         <TextField
           margin="dense"
           label="Descrição"
@@ -111,21 +121,17 @@ export const GroupDialog: React.FC<GroupDialogProps> = ({
           multiline
           rows={3}
           value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          onChange={e => setDescription(e.target.value)}
         />
 
         <Autocomplete
           multiple
           options={users}
-          getOptionLabel={(option) => option.username}
+          getOptionLabel={option => option.username}
           value={selectedUsers}
           onChange={(_, newValue) => setSelectedUsers(newValue)}
-          renderInput={(params) => (
-            <TextField
-              {...params}
-              label="Usuários"
-              margin="dense"
-            />
+          renderInput={params => (
+            <TextField {...params} label="Usuários" margin="dense" />
           )}
         />
       </DialogContent>

@@ -1,20 +1,23 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// Path: pages\Zones\components\ZoneDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  TextField,
   Autocomplete,
-  Box
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  TextField,
 } from '@mui/material';
-import { usersService } from '@/services/users';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { groupsService } from '@/services/groups';
+import { usersService } from '@/services/users';
 import { zonesService } from '@/services/zones';
-import type { User } from '@/types/users';
-import type { GroupDetails } from '@/types/groups';
 import type { ZoneFormData } from '@/types/geographic';
+import type { GroupDetails } from '@/types/groups';
+import type { User } from '@/types/users';
 
 interface ZoneDialogProps {
   open: boolean;
@@ -27,7 +30,7 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
   open,
   zoneId,
   onClose,
-  onSubmit
+  onSubmit,
 }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -43,7 +46,9 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
     try {
       const geojson = JSON.parse(text);
       if (!geojson.type || !geojson.coordinates) {
-        setGeomError('GeoJSON inválido: propriedades type e coordinates são obrigatórias');
+        setGeomError(
+          'GeoJSON inválido: propriedades type e coordinates são obrigatórias',
+        );
         return false;
       }
       if (!['Polygon', 'MultiPolygon'].includes(geojson.type)) {
@@ -78,12 +83,12 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
 
   const fetchZoneDetails = useCallback(async () => {
     if (!zoneId) return;
-    
+
     try {
       setLoading(true);
       const [zone, permissions] = await Promise.all([
         zonesService.getDetails(zoneId),
-        zonesService.getPermissions(zoneId)
+        zonesService.getPermissions(zoneId),
       ]);
 
       setName(zone.name);
@@ -95,7 +100,7 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
         permissions.user_permissions.map(async user => {
           const details = await usersService.getDetails(user.id);
           return details;
-        })
+        }),
       );
       setSelectedUsers(permittedUsers);
 
@@ -104,10 +109,9 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
         permissions.group_permissions.map(async group => {
           const details = await groupsService.getDetails(group.id);
           return details;
-        })
+        }),
       );
       setSelectedGroups(permittedGroups);
-
     } catch (error) {
       console.error('Error fetching zone:', error);
     } finally {
@@ -143,23 +147,23 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
       description,
       geom: geomText,
       userIds: selectedUsers.map(user => user.id),
-      groupIds: selectedGroups.map(group => group.id)
+      groupIds: selectedGroups.map(group => group.id),
     });
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
         component: 'form',
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
       }}
     >
       <DialogTitle>{zoneId ? 'Editar Zona' : 'Nova Zona'}</DialogTitle>
-      
+
       <DialogContent>
         <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, pt: 1 }}>
           <TextField
@@ -168,16 +172,16 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
             fullWidth
             required
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
           />
-          
+
           <TextField
             label="Descrição"
             fullWidth
             multiline
             rows={2}
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={e => setDescription(e.target.value)}
           />
 
           <TextField
@@ -187,36 +191,33 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
             multiline
             rows={8}
             value={geomText}
-            onChange={(e) => setGeomText(e.target.value)}
+            onChange={e => setGeomText(e.target.value)}
             error={!!geomError}
-            helperText={geomError || 'Insira um GeoJSON válido do tipo Polygon ou MultiPolygon'}
+            helperText={
+              geomError ||
+              'Insira um GeoJSON válido do tipo Polygon ou MultiPolygon'
+            }
           />
 
           <Autocomplete
             multiple
             options={users}
-            getOptionLabel={(option) => option.username}
+            getOptionLabel={option => option.username}
             value={selectedUsers}
             onChange={(_, newValue) => setSelectedUsers(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Usuários com Acesso"
-              />
+            renderInput={params => (
+              <TextField {...params} label="Usuários com Acesso" />
             )}
           />
 
           <Autocomplete
             multiple
             options={groups}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={option => option.name}
             value={selectedGroups}
             onChange={(_, newValue) => setSelectedGroups(newValue)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="Grupos com Acesso"
-              />
+            renderInput={params => (
+              <TextField {...params} label="Grupos com Acesso" />
             )}
           />
         </Box>
@@ -224,11 +225,7 @@ export const ZoneDialog: React.FC<ZoneDialogProps> = ({
 
       <DialogActions>
         <Button onClick={onClose}>Cancelar</Button>
-        <Button 
-          type="submit" 
-          variant="contained" 
-          disabled={loading}
-        >
+        <Button type="submit" variant="contained" disabled={loading}>
           {loading ? 'Salvando...' : 'Salvar'}
         </Button>
       </DialogActions>

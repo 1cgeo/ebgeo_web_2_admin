@@ -1,17 +1,21 @@
-import React from 'react';
+// Path: components\Profile\ProfileDialog.tsx
+import { AccountCircle, Close as CloseIcon } from '@mui/icons-material';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
+  Box,
   Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   IconButton,
   Typography,
-  Box,
-  Divider
 } from '@mui/material';
-import { Close as CloseIcon, AccountCircle } from '@mui/icons-material';
+
+import React from 'react';
+
 import { useAuth } from '@/context/AuthContext';
+
 import { ProfileForm } from './ProfileForm';
 
 interface ProfileDialogProps {
@@ -21,7 +25,7 @@ interface ProfileDialogProps {
 
 export const ProfileDialog: React.FC<ProfileDialogProps> = ({
   open,
-  onClose
+  onClose,
 }) => {
   const { user } = useAuth();
 
@@ -34,7 +38,7 @@ export const ProfileDialog: React.FC<ProfileDialogProps> = ({
       maxWidth="sm"
       fullWidth
       PaperProps={{
-        sx: { position: 'relative' }
+        sx: { position: 'relative' },
       }}
     >
       <DialogTitle>
@@ -48,7 +52,7 @@ export const ProfileDialog: React.FC<ProfileDialogProps> = ({
               </Typography>
             </Box>
           </Box>
-          <IconButton 
+          <IconButton
             onClick={onClose}
             size="small"
             sx={{ position: 'absolute', right: 8, top: 8 }}
@@ -71,9 +75,7 @@ export const ProfileDialog: React.FC<ProfileDialogProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>
-          Cancelar
-        </Button>
+        <Button onClick={onClose}>Cancelar</Button>
       </DialogActions>
     </Dialog>
   );

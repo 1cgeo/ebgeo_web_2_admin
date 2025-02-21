@@ -1,4 +1,6 @@
-import React, { createContext, useContext, useReducer, useEffect } from 'react';
+// Path: context\AuthContext.tsx
+import React, { createContext, useContext, useEffect, useReducer } from 'react';
+
 import { api } from '@/services/api';
 
 interface User {
@@ -35,7 +37,7 @@ const initialState: AuthState = {
   user: null,
   token: localStorage.getItem('token'),
   loading: false,
-  isAuthenticated: false
+  isAuthenticated: false,
 };
 
 function authReducer(state: AuthState, action: AuthAction): AuthState {
@@ -45,19 +47,19 @@ function authReducer(state: AuthState, action: AuthAction): AuthState {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
-        isAuthenticated: true
+        isAuthenticated: true,
       };
     case 'LOGOUT':
       return {
         ...state,
         user: null,
         token: null,
-        isAuthenticated: false
+        isAuthenticated: false,
       };
     case 'SET_LOADING':
       return {
         ...state,
-        loading: action.payload
+        loading: action.payload,
       };
     default:
       return state;
@@ -75,7 +77,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
           const response = await api.get('/api/users/me');
           if (response.data.role === 'admin') {
-            dispatch({ type: 'LOGIN', payload: { user: response.data, token } });
+            dispatch({
+              type: 'LOGIN',
+              payload: { user: response.data, token },
+            });
           } else {
             localStorage.removeItem('token');
           }

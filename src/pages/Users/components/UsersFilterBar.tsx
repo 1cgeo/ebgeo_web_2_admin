@@ -1,7 +1,11 @@
+// Path: pages\Users\components\UsersFilterBar.tsx
+import { MenuItem, TextField } from '@mui/material';
+
 import React from 'react';
-import { TextField, MenuItem } from '@mui/material';
+
 import { FilterBar } from '@/components/Form/FilterBar';
 import { SearchField } from '@/components/Form/SearchField';
+
 import type { FilterState } from '@/types/users';
 
 interface UsersFilterBarProps {
@@ -12,18 +16,18 @@ interface UsersFilterBarProps {
 const roleOptions = [
   { value: 'all', label: 'Todos os perfis' },
   { value: 'admin', label: 'Administradores' },
-  { value: 'user', label: 'Usuários' }
+  { value: 'user', label: 'Usuários' },
 ] as const;
 
 const statusOptions = [
   { value: 'all', label: 'Todos os status' },
   { value: 'active', label: 'Ativos' },
-  { value: 'inactive', label: 'Inativos' }
+  { value: 'inactive', label: 'Inativos' },
 ] as const;
 
 export const UsersFilterBar: React.FC<UsersFilterBarProps> = ({
   filters,
-  onFilterChange
+  onFilterChange,
 }) => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onFilterChange({ search: e.target.value });
@@ -46,10 +50,12 @@ export const UsersFilterBar: React.FC<UsersFilterBarProps> = ({
         select
         label="Perfil"
         value={filters.role}
-        onChange={(e) => onFilterChange({ role: e.target.value as FilterState['role'] })}
+        onChange={e =>
+          onFilterChange({ role: e.target.value as FilterState['role'] })
+        }
         sx={{ minWidth: 200 }}
       >
-        {roleOptions.map((option) => (
+        {roleOptions.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>
@@ -60,10 +66,12 @@ export const UsersFilterBar: React.FC<UsersFilterBarProps> = ({
         select
         label="Status"
         value={filters.status}
-        onChange={(e) => onFilterChange({ status: e.target.value as FilterState['status'] })}
+        onChange={e =>
+          onFilterChange({ status: e.target.value as FilterState['status'] })
+        }
         sx={{ minWidth: 200 }}
       >
-        {statusOptions.map((option) => (
+        {statusOptions.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>

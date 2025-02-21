@@ -1,17 +1,22 @@
-import React from 'react';
+// Path: pages\Users\index.tsx
 import { Box, Button } from '@mui/material';
+import type { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+
+import React from 'react';
+
 import { PageContainer } from '@/components/Layout/PageContainer';
 import { PageHeader } from '@/components/Layout/PageHeader';
-import { UsersTable } from './components/UsersTable';
-import { UsersFilterBar } from './components/UsersFilterBar';
-import { UserDialog } from './components/UserDialog';
-import { UserDetailsDialog } from './components/UserDetailsDialog';
-import { DeleteUserDialog } from './components/DeleteUserDialog';
-import { useUsers } from './hooks/useUsers';
+
 import type { FormData } from '@/types/users';
 import type { UserDetails } from '@/types/users';
-import type { AxiosError } from 'axios';
+
+import { DeleteUserDialog } from './components/DeleteUserDialog';
+import { UserDetailsDialog } from './components/UserDetailsDialog';
+import { UserDialog } from './components/UserDialog';
+import { UsersFilterBar } from './components/UsersFilterBar';
+import { UsersTable } from './components/UsersTable';
+import { useUsers } from './hooks/useUsers';
 
 interface ApiErrorResponse {
   status?: number;
@@ -21,8 +26,12 @@ const UsersPage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(null);
-  const [selectedUser, setSelectedUser] = React.useState<UserDetails | null>(null);
+  const [selectedUserId, setSelectedUserId] = React.useState<string | null>(
+    null,
+  );
+  const [selectedUser, setSelectedUser] = React.useState<UserDetails | null>(
+    null,
+  );
   const { enqueueSnackbar } = useSnackbar();
 
   const {
@@ -42,7 +51,7 @@ const UsersPage: React.FC = () => {
     handleRowsPerPageChange,
     handleFilterChange,
     handleSort,
-    refetchUsers
+    refetchUsers,
   } = useUsers();
 
   const handleCreate = () => {
@@ -66,7 +75,9 @@ const UsersPage: React.FC = () => {
       setSelectedUser(userDetails);
       setDetailsDialogOpen(true);
     } catch {
-      enqueueSnackbar('Erro ao carregar detalhes do usuário', { variant: 'error' });
+      enqueueSnackbar('Erro ao carregar detalhes do usuário', {
+        variant: 'error',
+      });
     }
   };
 
@@ -74,7 +85,9 @@ const UsersPage: React.FC = () => {
     try {
       if (selectedUserId) {
         await updateUser(selectedUserId, data);
-        enqueueSnackbar('Usuário atualizado com sucesso', { variant: 'success' });
+        enqueueSnackbar('Usuário atualizado com sucesso', {
+          variant: 'success',
+        });
       } else {
         await createUser(data);
         enqueueSnackbar('Usuário criado com sucesso', { variant: 'success' });
@@ -84,7 +97,9 @@ const UsersPage: React.FC = () => {
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
       if (axiosError.response?.status === 409) {
-        enqueueSnackbar('Já existe um usuário com este nome/email', { variant: 'error' });
+        enqueueSnackbar('Já existe um usuário com este nome/email', {
+          variant: 'error',
+        });
       } else {
         enqueueSnackbar('Erro ao salvar usuário', { variant: 'error' });
       }
@@ -96,11 +111,15 @@ const UsersPage: React.FC = () => {
 
     try {
       await toggleUserStatus(selectedUserId);
-      enqueueSnackbar('Status do usuário alterado com sucesso', { variant: 'success' });
+      enqueueSnackbar('Status do usuário alterado com sucesso', {
+        variant: 'success',
+      });
       setDeleteDialogOpen(false);
       await refetchUsers();
     } catch {
-      enqueueSnackbar('Erro ao alterar status do usuário', { variant: 'error' });
+      enqueueSnackbar('Erro ao alterar status do usuário', {
+        variant: 'error',
+      });
     }
   };
 
@@ -110,20 +129,13 @@ const UsersPage: React.FC = () => {
         title="Usuários"
         subtitle="Gerencie os usuários do sistema"
         actions={
-          <Button
-            variant="contained"
-            onClick={handleCreate}
-            disabled={loading}
-          >
+          <Button variant="contained" onClick={handleCreate} disabled={loading}>
             Novo Usuário
           </Button>
         }
       />
 
-      <UsersFilterBar
-        filters={filters}
-        onFilterChange={handleFilterChange}
-      />
+      <UsersFilterBar filters={filters} onFilterChange={handleFilterChange} />
 
       <Box sx={{ mt: 3 }}>
         <UsersTable

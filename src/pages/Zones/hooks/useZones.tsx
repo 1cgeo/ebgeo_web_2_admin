@@ -1,14 +1,22 @@
-import { useState, useCallback, useEffect } from 'react';
-import { zonesService } from '@/services/zones';
+// Path: pages\Zones\hooks\useZones.tsx
+import { useCallback, useEffect, useState } from 'react';
+
 import { useDebounce } from '@/hooks/useDebounce';
-import type { 
-  ZoneWithStats, 
-  ZoneListParams, 
-  CreateZoneRequest, 
-  UpdateZonePermissionsRequest 
+
+import { zonesService } from '@/services/zones';
+import type {
+  CreateZoneRequest,
+  UpdateZonePermissionsRequest,
+  ZoneListParams,
+  ZoneWithStats,
 } from '@/types/geographic';
 
-type SortableFields = 'name' | 'created_at' | 'area_km2' | 'user_count' | 'group_count';
+type SortableFields =
+  | 'name'
+  | 'created_at'
+  | 'area_km2'
+  | 'user_count'
+  | 'group_count';
 
 export function useZones() {
   const [page, setPage] = useState(0);
@@ -35,7 +43,7 @@ export function useZones() {
         limit: rowsPerPage,
         search: debouncedSearch || undefined,
         sort: sortField,
-        order: sortOrder
+        order: sortOrder,
       };
 
       const response = await zonesService.list(params);
@@ -58,7 +66,9 @@ export function useZones() {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -92,7 +102,10 @@ export function useZones() {
     return zonesService.getPermissions(id);
   };
 
-  const updateZonePermissions = async (id: string, data: UpdateZonePermissionsRequest) => {
+  const updateZonePermissions = async (
+    id: string,
+    data: UpdateZonePermissionsRequest,
+  ) => {
     return zonesService.updatePermissions(id, data);
   };
 
@@ -115,6 +128,6 @@ export function useZones() {
     handleRowsPerPageChange,
     handleSearch,
     handleSort,
-    refetchZones: fetchZones
+    refetchZones: fetchZones,
   };
 }

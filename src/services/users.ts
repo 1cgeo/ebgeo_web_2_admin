@@ -1,14 +1,16 @@
-import { api } from './api';
-import type { 
+// Path: services\users.ts
+import type {
+  CreateUserDTO,
   ListParams,
-  UserListResponse, 
-  UserDetails, 
-  CreateUserDTO, 
-  UpdateUserDTO 
+  UpdateUserDTO,
+  UserDetails,
+  UserListResponse,
 } from '@/types/users';
 
+import { api } from './api';
+
 export const usersService = {
-  async list(params: ListParams): Promise<UserListResponse> {    
+  async list(params: ListParams): Promise<UserListResponse> {
     const { data } = await api.get('/api/users', { params });
     return data;
   },
@@ -30,5 +32,5 @@ export const usersService = {
 
   async updatePassword(id: string, newPassword: string): Promise<void> {
     await api.put(`/api/users/${id}/password`, { newPassword });
-  }
+  },
 };

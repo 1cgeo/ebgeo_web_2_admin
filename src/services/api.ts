@@ -1,5 +1,5 @@
+// Path: services\api.ts
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
-import { NetworkError } from './auth';
 
 interface ApiErrorResponse {
   message?: string;
@@ -15,7 +15,7 @@ export class CSPError extends Error {
 
 export const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
-  timeout: 15000
+  timeout: 15000,
 });
 
 // Request interceptor
@@ -29,14 +29,14 @@ api.interceptors.request.use(
   },
   (error: AxiosError) => {
     return Promise.reject(error);
-  }
+  },
 );
 
 api.interceptors.response.use(
   response => response,
   async (error: AxiosError<ApiErrorResponse>) => {
     const isLoginRequest = error.config?.url?.includes('/auth/login');
-    
+
     if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.removeItem('token');
       window.location.href = '/login';
@@ -52,31 +52,29 @@ api.interceptors.response.use(
       localStorage.removeItem('token');
       window.location.href = '/login?error=ratelimit';
     }
-    
+
     return Promise.reject(error);
-  }
+  },
 );
 
 export const handleAuthError = (navigate: (path: string) => void) => {
   const urlParams = new URLSearchParams(window.location.search);
   const error = urlParams.get('error');
-  
+
   if (error === 'forbidden') {
     navigate('/login');
     return 'Sua sessão expirou devido a alterações nas suas permissões.';
   }
-  
+
   if (error === 'ratelimit') {
     navigate('/login');
     return 'Limite de requisições excedido. Por favor, aguarde alguns minutos antes de tentar novamente.';
   }
-  
+
   return null;
 };
 
 // CSP violation handler
-window.addEventListener('securitypolicyviolation', (e) => {
+window.addEventListener('securitypolicyviolation', e => {
   throw new CSPError(e.violatedDirective);
 });
-
-export { NetworkError };

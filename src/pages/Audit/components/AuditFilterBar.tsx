@@ -1,18 +1,22 @@
-import React from 'react';
+// Path: pages\Audit\components\AuditFilterBar.tsx
+import { Clear as ClearIcon } from '@mui/icons-material';
 import {
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   Box,
   Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   SelectChangeEvent,
 } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
+
+import React from 'react';
+
 import { FilterBar } from '@/components/Form/FilterBar';
 import { SearchField } from '@/components/Form/SearchField';
-import { Clear as ClearIcon } from '@mui/icons-material';
+
 import { AuditAction, auditActionLabels } from '@/types/audit';
 
 interface AuditFilterBarProps {
@@ -34,7 +38,7 @@ export const AuditFilterBar: React.FC<AuditFilterBarProps> = ({
   onDateRangeChange,
   onActionChange,
   onClearFilters,
-  loading
+  loading,
 }) => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onSearch(e.target.value);
@@ -78,11 +82,11 @@ export const AuditFilterBar: React.FC<AuditFilterBarProps> = ({
               textField: {
                 size: 'small',
                 sx: { width: '160px' },
-                error: false
+                error: false,
               },
               actionBar: {
-                actions: ['clear', 'today', 'accept']
-              }
+                actions: ['clear', 'today', 'accept'],
+              },
             }}
           />
           <DatePicker
@@ -95,18 +99,20 @@ export const AuditFilterBar: React.FC<AuditFilterBarProps> = ({
               textField: {
                 size: 'small',
                 sx: { width: '160px' },
-                error: false
+                error: false,
               },
               actionBar: {
-                actions: ['clear', 'today', 'accept']
-              }
+                actions: ['clear', 'today', 'accept'],
+              },
             }}
           />
         </Box>
 
         {/* Seletor de Ação */}
         <FormControl sx={{ minWidth: 200, marginTop: 0 }}>
-          <InputLabel id="action-type-label" size="small">Tipo de Ação</InputLabel>
+          <InputLabel id="action-type-label" size="small">
+            Tipo de Ação
+          </InputLabel>
           <Select
             labelId="action-type-label"
             value={selectedAction}
@@ -127,20 +133,20 @@ export const AuditFilterBar: React.FC<AuditFilterBarProps> = ({
         {/* Botão Limpar Filtros */}
         <Box sx={{ alignSelf: 'center' }}>
           <span>
-          <Button
-  variant="text"
-  color="primary"
-  size="small"
-  onClick={onClearFilters}
-  disabled={loading}
-  startIcon={<ClearIcon />}
-  sx={{ 
-    height: '40px',
-    minWidth: 'auto'
-  }}
->
-  Limpar
-</Button>
+            <Button
+              variant="text"
+              color="primary"
+              size="small"
+              onClick={onClearFilters}
+              disabled={loading}
+              startIcon={<ClearIcon />}
+              sx={{
+                height: '40px',
+                minWidth: 'auto',
+              }}
+            >
+              Limpar
+            </Button>
           </span>
         </Box>
       </Box>

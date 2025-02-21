@@ -1,26 +1,29 @@
-import React from 'react';
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-} from '@mui/material';
-import Grid from '@mui/material/Grid2';
+// Path: pages\Groups\components\GroupDetailsDialog.tsx
 import {
   Group as GroupIcon,
   ViewInAr as ModelIcon,
+  Person as PersonIcon,
   LocationOn as ZoneIcon,
-  Person as PersonIcon
 } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
+import React from 'react';
+
 import type { GroupDetails } from '@/types/groups';
 
 interface GroupDetailsDialogProps {
@@ -32,7 +35,7 @@ interface GroupDetailsDialogProps {
 export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
   open,
   group,
-  onClose
+  onClose,
 }) => {
   if (!group) return null;
 
@@ -42,23 +45,16 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
       month: 'long',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   return (
-    <Dialog 
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>
           <GroupIcon color="primary" />
-          <Typography variant="h6">
-            Detalhes do Grupo
-          </Typography>
+          <Typography variant="h6">Detalhes do Grupo</Typography>
         </Box>
       </DialogTitle>
 
@@ -79,7 +75,8 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
                 </Typography>
               )}
               <Typography variant="body2" color="text.secondary">
-                Criado em {formatDate(group.created_at)} por {group.created_by_name}
+                Criado em {formatDate(group.created_at)} por{' '}
+                {group.created_by_name}
                 <br />
                 Última atualização em {formatDate(group.updated_at)}
               </Typography>
@@ -116,7 +113,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
               Membros
             </Typography>
             <List>
-              {group.members.map((member) => (
+              {group.members.map(member => (
                 <ListItem key={member.id} divider>
                   <ListItemAvatar>
                     <Avatar>
@@ -139,7 +136,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
                 Permissões de Modelos
               </Typography>
               <List>
-                {group.model_permissions.map((permission) => (
+                {group.model_permissions.map(permission => (
                   <ListItem key={permission.id} divider>
                     <ListItemAvatar>
                       <Avatar>
@@ -163,7 +160,7 @@ export const GroupDetailsDialog: React.FC<GroupDetailsDialogProps> = ({
                 Permissões de Zonas
               </Typography>
               <List>
-                {group.zone_permissions.map((permission) => (
+                {group.zone_permissions.map(permission => (
                   <ListItem key={permission.id} divider>
                     <ListItemAvatar>
                       <Avatar>

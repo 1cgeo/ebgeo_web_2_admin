@@ -1,7 +1,11 @@
+// Path: pages\Login\index.tsx
 import { Box, useMediaQuery, useTheme } from '@mui/material';
+
+import { Navigate } from 'react-router-dom';
+
 import { BackgroundSlider } from '@/components/Login/BackgroundSlider';
 import { LoginForm } from '@/components/Login/LoginForm';
-import { Navigate } from 'react-router-dom';
+
 import { useAuth } from '@/context/AuthContext';
 
 const LoginPage = () => {
@@ -23,7 +27,7 @@ const LoginPage = () => {
         justifyContent: 'center',
         position: 'relative',
         padding: isMobile ? 2 : 4,
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
       <Box
@@ -33,7 +37,7 @@ const LoginPage = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          zIndex: 0
+          zIndex: 0,
         }}
       >
         <BackgroundSlider />

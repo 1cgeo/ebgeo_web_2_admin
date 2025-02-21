@@ -1,17 +1,23 @@
-import { api } from './api';
+// Path: services\auth.ts
 import axios, { AxiosError } from 'axios';
+
 import type { LoginCredentials, LoginResponse } from '@/types/auth';
+
+import { api } from './api';
 
 const TIMEOUT = 15000;
 
 export class NetworkError extends Error {
-  constructor(message: string, public code: NetworkErrorCode) {
+  constructor(
+    message: string,
+    public code: NetworkErrorCode,
+  ) {
     super(message);
     this.name = 'NetworkError';
   }
 }
 
-export type NetworkErrorCode = 
+export type NetworkErrorCode =
   | 'TIMEOUT'
   | 'DNS'
   | 'SSL'
@@ -22,15 +28,19 @@ export type NetworkErrorCode =
 export const authService = {
   async login(credentials: LoginCredentials): Promise<LoginResponse> {
     try {
-      const response = await api.post<LoginResponse>('/api/auth/login', credentials, {
-        timeout: TIMEOUT,
-      });
+      const response = await api.post<LoginResponse>(
+        '/api/auth/login',
+        credentials,
+        {
+          timeout: TIMEOUT,
+        },
+      );
       localStorage.setItem('token', response.data.token);
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
-        
+
         if (!axiosError.response) {
           if (axiosError.code === 'ECONNABORTED') {
             throw new NetworkError('Connection timeout', 'TIMEOUT');
@@ -43,7 +53,7 @@ export const authService = {
           }
           throw new NetworkError('Server unavailable', 'NETWORK');
         }
-        
+
         if (axiosError.response.status === 401) {
           localStorage.removeItem('token');
           throw new NetworkError('Invalid or expired token', 'AUTH');
@@ -63,5 +73,5 @@ export const authService = {
 
   isAuthenticated(): boolean {
     return Boolean(localStorage.getItem('token'));
-  }
+  },
 };

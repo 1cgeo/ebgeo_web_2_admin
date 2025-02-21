@@ -1,5 +1,7 @@
-import React from 'react';
+// Path: components\Feedback\LoadingScreen.tsx
 import { Box, CircularProgress, Typography } from '@mui/material';
+
+import React from 'react';
 
 const LoadingScreen: React.FC = () => {
   return (

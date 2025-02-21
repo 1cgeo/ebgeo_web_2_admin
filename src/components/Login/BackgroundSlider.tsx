@@ -1,14 +1,16 @@
+// Path: components\Login\BackgroundSlider.tsx
 import { Box } from '@mui/material';
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import 'slick-carousel/slick/slick-theme.css';
+import 'slick-carousel/slick/slick.css';
 
+import Slider from 'react-slick';
+
+import amazonia from '@/assets/images/satellite/amazonia.png';
+import brasilia from '@/assets/images/satellite/brasilia.png';
+import luiz_eduardo from '@/assets/images/satellite/luiz_eduardo.png';
 import montanhas from '@/assets/images/satellite/montanhas.png';
 import rio from '@/assets/images/satellite/rio.png';
-import brasilia from '@/assets/images/satellite/brasilia.png';
 import santos from '@/assets/images/satellite/santos.png';
-import amazonia from '@/assets/images/satellite/amazonia.png';
-import luiz_eduardo from '@/assets/images/satellite/luiz_eduardo.png';
 import uruguaiana from '@/assets/images/satellite/uruguaiana.png';
 
 const SATELLITE_IMAGES = [
@@ -18,7 +20,7 @@ const SATELLITE_IMAGES = [
   santos,
   amazonia,
   luiz_eduardo,
-  uruguaiana
+  uruguaiana,
 ];
 
 export const BackgroundSlider = () => {
@@ -32,11 +34,18 @@ export const BackgroundSlider = () => {
     autoplay: true,
     autoplaySpeed: 8000,
     pauseOnHover: false,
-    arrows: false
+    arrows: false,
   };
 
   return (
-    <Box sx={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+    <Box
+      sx={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+      }}
+    >
       <Slider {...settings}>
         {SATELLITE_IMAGES.map((image, index) => (
           <Box key={index} sx={{ height: '100vh' }}>
@@ -46,19 +55,19 @@ export const BackgroundSlider = () => {
                 inset: 0,
                 backgroundImage: `url(${image})`,
                 backgroundSize: 'cover',
-                backgroundPosition: 'center'
+                backgroundPosition: 'center',
               }}
             />
           </Box>
         ))}
       </Slider>
-      
+
       <Box
         sx={{
           position: 'absolute',
           inset: 0,
           backgroundColor: 'rgba(0, 0, 0, 0.1)',
-          zIndex: 2
+          zIndex: 2,
         }}
       />
     </Box>

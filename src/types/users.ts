@@ -1,6 +1,17 @@
+// Path: types\users.ts
 export type UserStatus = 'active' | 'inactive' | 'all';
 export type UserRole = 'admin' | 'user' | 'all';
-export type SortableFields = 'username' | 'email' | 'role' | 'created_at' | 'last_login' | 'group_count' | 'nome_completo' | 'nome_guerra' | 'organizacao_militar' | 'is_active';
+export type SortableFields =
+  | 'username'
+  | 'email'
+  | 'role'
+  | 'created_at'
+  | 'last_login'
+  | 'group_count'
+  | 'nome_completo'
+  | 'nome_guerra'
+  | 'organizacao_militar'
+  | 'is_active';
 
 export interface ListParams {
   page?: number;
@@ -102,8 +113,6 @@ export interface UserListResponse {
   page: number;
   limit: number;
 }
-
-
 
 export interface FilterState {
   search: string;

@@ -1,20 +1,26 @@
-import React from 'react';
+// Path: pages\Logs\components\LogDetailsDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
   Box,
+  Button,
   Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   Paper,
-  Divider
+  Typography,
 } from '@mui/material';
-import type { LogEntry } from '@/types/logs';
-import { getLevelColor, getLevelLabel, formatDate } from './logUtils';
 
-const formatDetails = (details: Record<string, unknown> | undefined): string => {
+import React from 'react';
+
+import type { LogEntry } from '@/types/logs';
+
+import { formatDate, getLevelColor, getLevelLabel } from './logUtils';
+
+const formatDetails = (
+  details: Record<string, unknown> | undefined,
+): string => {
   if (!details) return 'Nenhum detalhe disponível';
   try {
     return JSON.stringify(details, null, 2);
@@ -32,22 +38,15 @@ interface LogDetailsDialogProps {
 export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
   open,
   log,
-  onClose
+  onClose,
 }) => {
   if (!log) return null;
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Typography variant="h6">
-            Detalhes do Log
-          </Typography>
+          <Typography variant="h6">Detalhes do Log</Typography>
           <Chip
             label={getLevelLabel(log.level)}
             color={getLevelColor(log.level)}
@@ -74,9 +73,7 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
               Categoria
             </Typography>
-            <Typography variant="body1">
-              {log.category}
-            </Typography>
+            <Typography variant="body1">{log.category}</Typography>
           </Box>
 
           <Divider />
@@ -97,13 +94,12 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
             <Typography variant="subtitle2" color="text.secondary" gutterBottom>
               Detalhes
             </Typography>
-            <Paper 
-              variant="outlined" 
-              sx={{ 
+            <Paper
+              variant="outlined"
+              sx={{
                 p: 2,
-                backgroundColor: theme => theme.palette.mode === 'dark' 
-                  ? 'grey.900' 
-                  : 'grey.50'
+                backgroundColor: theme =>
+                  theme.palette.mode === 'dark' ? 'grey.900' : 'grey.50',
               }}
             >
               <pre style={{ margin: 0, whiteSpace: 'pre-wrap' }}>
@@ -115,9 +111,7 @@ export const LogDetailsDialog: React.FC<LogDetailsDialogProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>
-          Fechar
-        </Button>
+        <Button onClick={onClose}>Fechar</Button>
       </DialogActions>
     </Dialog>
   );

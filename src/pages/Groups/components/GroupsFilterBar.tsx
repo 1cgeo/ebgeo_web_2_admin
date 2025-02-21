@@ -1,5 +1,8 @@
+// Path: pages\Groups\components\GroupsFilterBar.tsx
 import React, { useCallback } from 'react';
+
 import { FilterBar } from '@/components/Form/FilterBar';
+
 import { MemorizedSearchField } from './MemorizedSearchField';
 
 interface GroupsFilterBarProps {
@@ -10,15 +13,18 @@ interface GroupsFilterBarProps {
 
 export const GroupsFilterBar: React.FC<GroupsFilterBarProps> = ({
   search,
-  onSearch
+  onSearch,
 }) => {
   const handleClear = useCallback(() => {
     onSearch('');
   }, [onSearch]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(e.target.value);
-  }, [onSearch]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onSearch(e.target.value);
+    },
+    [onSearch],
+  );
 
   return (
     <FilterBar>

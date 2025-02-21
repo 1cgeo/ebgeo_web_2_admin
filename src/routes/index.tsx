@@ -1,8 +1,11 @@
-import { lazy, Suspense } from 'react';
+// Path: routes\index.tsx
+import { Suspense, lazy } from 'react';
 import { createBrowserRouter } from 'react-router-dom';
+
+import DashboardLayout from '@/layouts/DashboardLayout';
+
 import { RequireAuth as ProtectedRoute } from '@/components/Auth/RequireAuth';
 import LoadingScreen from '@/components/Feedback/LoadingScreen';
-import DashboardLayout from '@/layouts/DashboardLayout';
 
 // Lazy loading das páginas
 const LoginPage = lazy(() => import('@/pages/Login'));
@@ -21,7 +24,7 @@ export const router = createBrowserRouter([
       <Suspense fallback={<LoadingScreen />}>
         <LoginPage />
       </Suspense>
-    )
+    ),
   },
   {
     path: '/',
@@ -37,7 +40,7 @@ export const router = createBrowserRouter([
           <Suspense fallback={<LoadingScreen />}>
             <DashboardPage />
           </Suspense>
-        )
+        ),
       },
       {
         path: 'users',
@@ -47,7 +50,7 @@ export const router = createBrowserRouter([
               <UsersPage />
             </Suspense>
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: 'groups',
@@ -57,7 +60,7 @@ export const router = createBrowserRouter([
               <GroupsPage />
             </Suspense>
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: 'catalog',
@@ -67,7 +70,7 @@ export const router = createBrowserRouter([
               <CatalogPage />
             </Suspense>
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: 'zones',
@@ -77,7 +80,7 @@ export const router = createBrowserRouter([
               <ZonesPage />
             </Suspense>
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: 'logs',
@@ -87,7 +90,7 @@ export const router = createBrowserRouter([
               <LogsPage />
             </Suspense>
           </ProtectedRoute>
-        )
+        ),
       },
       {
         path: 'audit',
@@ -97,8 +100,8 @@ export const router = createBrowserRouter([
               <AuditPage />
             </Suspense>
           </ProtectedRoute>
-        )
-      }
-    ]
-  }
+        ),
+      },
+    ],
+  },
 ]);

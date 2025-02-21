@@ -1,13 +1,17 @@
-import { api } from './api';
+// Path: services\catalog.ts
 import type {
-  ModelPermissionsListResponse,
   ModelPermissions,
+  ModelPermissionsListResponse,
+  ModelPermissionsQueryParams,
   UpdateModelPermissionsRequest,
-  ModelPermissionsQueryParams
 } from '@/types/catalog';
 
+import { api } from './api';
+
 export const catalogService = {
-  async listPermissions(params: ModelPermissionsQueryParams): Promise<ModelPermissionsListResponse> {
+  async listPermissions(
+    params: ModelPermissionsQueryParams,
+  ): Promise<ModelPermissionsListResponse> {
     const { data } = await api.get('/api/catalog3d/permissions', { params });
     return data;
   },
@@ -17,7 +21,10 @@ export const catalogService = {
     return data;
   },
 
-  async updatePermissions(modelId: string, permissions: UpdateModelPermissionsRequest): Promise<void> {
+  async updatePermissions(
+    modelId: string,
+    permissions: UpdateModelPermissionsRequest,
+  ): Promise<void> {
     await api.put(`/api/catalog3d/permissions/${modelId}`, permissions);
-  }
+  },
 };

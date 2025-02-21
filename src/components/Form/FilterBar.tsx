@@ -1,5 +1,7 @@
-import React from 'react';
+// Path: components\Form\FilterBar.tsx
 import { Paper } from '@mui/material';
+
+import React from 'react';
 
 interface FilterBarProps {
   children: React.ReactNode;
@@ -8,7 +10,7 @@ interface FilterBarProps {
 
 export const FilterBar: React.FC<FilterBarProps> = ({
   children,
-  sticky = false
+  sticky = false,
 }) => {
   return (
     <Paper
@@ -20,7 +22,7 @@ export const FilterBar: React.FC<FilterBarProps> = ({
         flexWrap: 'wrap',
         position: sticky ? 'sticky' : 'static',
         top: sticky ? 0 : 'auto',
-        zIndex: 1
+        zIndex: 1,
       }}
     >
       {children}

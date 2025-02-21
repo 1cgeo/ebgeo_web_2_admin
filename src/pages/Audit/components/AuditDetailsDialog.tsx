@@ -1,23 +1,26 @@
-import React from 'react';
+// Path: pages\Audit\components\AuditDetailsDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Divider,
-  Chip
-} from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import {
+  Category as CategoryIcon,
+  Computer as ComputerIcon,
+  Info as InfoIcon,
   AccessTime as TimeIcon,
   AccountCircle as UserIcon,
-  Category as CategoryIcon,
-  Info as InfoIcon,
-  Computer as ComputerIcon
 } from '@mui/icons-material';
+import {
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  Typography,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
+import React from 'react';
+
 import type { AuditEntry } from '@/types/audit';
 import { auditActionLabels, targetTypeLabels } from '@/types/audit';
 
@@ -30,7 +33,7 @@ interface AuditDetailsDialogProps {
 export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
   open,
   entry,
-  onClose
+  onClose,
 }) => {
   if (!entry) return null;
 
@@ -42,12 +45,15 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      timeZoneName: 'short'
+      timeZoneName: 'short',
     });
   };
 
   // Função para renderizar o objeto de detalhes de forma recursiva
-  const renderDetails = (details: Record<string, unknown>, indent = 0): React.ReactNode => {
+  const renderDetails = (
+    details: Record<string, unknown>,
+    indent = 0,
+  ): React.ReactNode => {
     return (
       <Box sx={{ pl: indent }}>
         {Object.entries(details).map(([key, value]) => (
@@ -69,12 +75,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
   };
 
   return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <InfoIcon color="primary" />
@@ -89,7 +90,9 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
           {/* Informações Básicas */}
           <Grid size={{ xs: 12 }}>
             <Box sx={{ mb: 2 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}
+              >
                 <TimeIcon color="action" />
                 <Typography variant="body2" color="text.secondary">
                   Registrado em {formatDate(entry.timestamp)}
@@ -98,8 +101,13 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
 
               <Chip
                 label={auditActionLabels[entry.action]}
-                color={entry.action.includes('DELETE') ? 'error' : 
-                       entry.action.includes('CREATE') ? 'success' : 'warning'}
+                color={
+                  entry.action.includes('DELETE')
+                    ? 'error'
+                    : entry.action.includes('CREATE')
+                      ? 'success'
+                      : 'warning'
+                }
                 sx={{ mb: 2 }}
               />
             </Box>
@@ -113,9 +121,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
                 Usuário
               </Box>
             </Typography>
-            <Typography variant="body2">
-              {entry.actor.username}
-            </Typography>
+            <Typography variant="body2">{entry.actor.username}</Typography>
             <Typography variant="caption" color="text.secondary">
               ID: {entry.actor.id}
             </Typography>
@@ -148,7 +154,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
                 Informações Técnicas
               </Box>
             </Typography>
-            
+
             <Grid container spacing={2}>
               <Grid size={{ xs: 12, sm: 6 }}>
                 <Typography variant="body2" color="text.secondary">
@@ -179,9 +185,7 @@ export const AuditDetailsDialog: React.FC<AuditDetailsDialogProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>
-          Fechar
-        </Button>
+        <Button onClick={onClose}>Fechar</Button>
       </DialogActions>
     </Dialog>
   );

@@ -1,14 +1,17 @@
-import { useState, useCallback, useEffect } from 'react';
-import { usersService } from '@/services/users';
+// Path: pages\Users\hooks\useUsers.ts
+import { useCallback, useEffect, useState } from 'react';
+
 import { useDebounce } from '@/hooks/useDebounce';
-import type { User, CreateUserDTO, UpdateUserDTO } from '@/types/users';
+
+import { usersService } from '@/services/users';
+import type { CreateUserDTO, UpdateUserDTO, User } from '@/types/users';
 import type { FilterState, SortableFields } from '@/types/users';
 
 const initialFilters: FilterState = {
   search: '',
   role: 'all',
   status: 'all',
-  organizacao: ''
+  organizacao: '',
 };
 
 export function useUsers() {
@@ -40,7 +43,7 @@ export function useUsers() {
         status: filters.status === 'all' ? undefined : filters.status,
         organizacao: debouncedOrganizacao || undefined,
         sort: sortField,
-        order: sortOrder
+        order: sortOrder,
       };
 
       const response = await usersService.list(params);
@@ -53,14 +56,14 @@ export function useUsers() {
       setLoading(false);
     }
   }, [
-    page, 
-    rowsPerPage, 
-    debouncedSearch, 
+    page,
+    rowsPerPage,
+    debouncedSearch,
     debouncedOrganizacao,
-    filters.role, 
-    filters.status, 
-    sortField, 
-    sortOrder
+    filters.role,
+    filters.status,
+    sortField,
+    sortOrder,
   ]);
 
   useEffect(() => {
@@ -71,7 +74,9 @@ export function useUsers() {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -100,7 +105,7 @@ export function useUsers() {
     if (!user) return;
 
     return usersService.update(id, {
-      isActive: !user.isActive
+      isActive: !user.isActive,
     });
   };
 
@@ -126,6 +131,6 @@ export function useUsers() {
     handleRowsPerPageChange,
     handleFilterChange,
     handleSort,
-    refetchUsers: fetchUsers
+    refetchUsers: fetchUsers,
   };
 }

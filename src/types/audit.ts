@@ -1,3 +1,4 @@
+// Path: types\audit.ts
 export type AuditAction =
   | 'USER_CREATE'
   | 'USER_UPDATE'
@@ -66,7 +67,7 @@ export const auditActionLabels: Record<AuditAction, string> = {
   ZONE_PERMISSION_CHANGE: 'Alteração de Permissão de Zona',
   API_KEY_REGENERATE: 'Regeneração de API Key',
   ADMIN_LOGIN: 'Login Administrativo',
-  ADMIN_ACTION: 'Ação Administrativa'
+  ADMIN_ACTION: 'Ação Administrativa',
 };
 
 export const targetTypeLabels: Record<AuditTargetType, string> = {
@@ -74,5 +75,5 @@ export const targetTypeLabels: Record<AuditTargetType, string> = {
   GROUP: 'Grupo',
   MODEL: 'Modelo',
   ZONE: 'Zona',
-  SYSTEM: 'Sistema'
+  SYSTEM: 'Sistema',
 };

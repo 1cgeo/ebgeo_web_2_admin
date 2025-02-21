@@ -1,28 +1,34 @@
-import React, { useState, useEffect } from 'react';
+// Path: pages\Catalog\components\ModelPermissionsDialog.tsx
+import { Lock, LockOpen } from '@mui/icons-material';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
+  Autocomplete,
   Box,
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
   FormControl,
   FormControlLabel,
-  RadioGroup,
   Radio,
-  Typography,
-  Divider,
-  Autocomplete,
+  RadioGroup,
   TextField,
-  CircularProgress
+  Typography,
 } from '@mui/material';
-import { Lock, LockOpen } from '@mui/icons-material';
-import { usersService } from '@/services/users';
+
+import React, { useEffect, useState } from 'react';
+
 import { groupsService } from '@/services/groups';
-import type { User } from '@/types/users';
-import type { GroupDetails } from '@/types/groups';
+import { usersService } from '@/services/users';
 import { ModelAccessLevel } from '@/types/catalog';
-import type { ModelPermissions, ModelPermissionsFormData } from '@/types/catalog';
+import type {
+  ModelPermissions,
+  ModelPermissionsFormData,
+} from '@/types/catalog';
+import type { GroupDetails } from '@/types/groups';
+import type { User } from '@/types/users';
 
 interface ModelPermissionsDialogProps {
   open: boolean;
@@ -37,9 +43,11 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
   modelId: _modelId,
   onClose,
   onSubmit,
-  initialData
+  initialData,
 }) => {
-  const [accessLevel, setAccessLevel] = useState<ModelAccessLevel>(ModelAccessLevel.PRIVATE);
+  const [accessLevel, setAccessLevel] = useState<ModelAccessLevel>(
+    ModelAccessLevel.PRIVATE,
+  );
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [selectedGroups, setSelectedGroups] = useState<GroupDetails[]>([]);
   const [users, setUsers] = useState<User[]>([]);
@@ -68,15 +76,15 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
     if (open) {
       fetchUsers();
       fetchGroups();
-      
+
       if (initialData) {
         setAccessLevel(initialData.access_level);
         // Map initial users and groups
-        const initialUsers = users.filter(user => 
-          initialData.user_permissions.some(p => p.id === user.id)
+        const initialUsers = users.filter(user =>
+          initialData.user_permissions.some(p => p.id === user.id),
         );
-        const initialGroups = groups.filter(group => 
-          initialData.group_permissions.some(p => p.id === group.id)
+        const initialGroups = groups.filter(group =>
+          initialData.group_permissions.some(p => p.id === group.id),
         );
         setSelectedUsers(initialUsers);
         setSelectedGroups(initialGroups);
@@ -95,7 +103,7 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
       await onSubmit({
         access_level: accessLevel,
         userIds: selectedUsers.map(user => user.id),
-        groupIds: selectedGroups.map(group => group.id)
+        groupIds: selectedGroups.map(group => group.id),
       });
       onClose();
     } finally {
@@ -104,14 +112,14 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
         component: 'form',
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
       }}
     >
       <DialogTitle>
@@ -122,7 +130,7 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
           </Typography>
         )}
       </DialogTitle>
-      
+
       <DialogContent>
         <Box sx={{ mb: 3 }}>
           <Typography variant="subtitle2" gutterBottom>
@@ -131,7 +139,7 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
           <FormControl component="fieldset">
             <RadioGroup
               value={accessLevel}
-              onChange={(e) => setAccessLevel(e.target.value as ModelAccessLevel)}
+              onChange={e => setAccessLevel(e.target.value as ModelAccessLevel)}
             >
               <FormControlLabel
                 value={ModelAccessLevel.PUBLIC}
@@ -166,10 +174,10 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
           <Autocomplete
             multiple
             options={users}
-            getOptionLabel={(option) => `${option.username} (${option.email})`}
+            getOptionLabel={option => `${option.username} (${option.email})`}
             value={selectedUsers}
             onChange={(_, newValue) => setSelectedUsers(newValue)}
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField
                 {...params}
                 variant="outlined"
@@ -187,10 +195,10 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
           <Autocomplete
             multiple
             options={groups}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={option => option.name}
             value={selectedGroups}
             onChange={(_, newValue) => setSelectedGroups(newValue)}
-            renderInput={(params) => (
+            renderInput={params => (
               <TextField
                 {...params}
                 variant="outlined"
@@ -206,9 +214,9 @@ export const ModelPermissionsDialog: React.FC<ModelPermissionsDialogProps> = ({
         <Button onClick={onClose} disabled={loading}>
           Cancelar
         </Button>
-        <Button 
-          type="submit" 
-          variant="contained" 
+        <Button
+          type="submit"
+          variant="contained"
           disabled={loading}
           startIcon={loading ? <CircularProgress size={20} /> : undefined}
         >

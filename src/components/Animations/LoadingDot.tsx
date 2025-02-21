@@ -1,3 +1,4 @@
+// Path: components\Animations\LoadingDot.tsx
 import { Box, keyframes } from '@mui/material';
 
 const pulse = keyframes`

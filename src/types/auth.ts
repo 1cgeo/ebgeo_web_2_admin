@@ -1,14 +1,15 @@
+// Path: types\auth.ts
 export interface LoginCredentials {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  user: {
+    id: string;
     username: string;
-    password: string;
-  }
-  
-  export interface LoginResponse {
-    user: {
-      id: string;
-      username: string;
-      email: string;
-      role: 'admin' | 'user';
-    };
-    token: string;
-  }
+    email: string;
+    role: 'admin' | 'user';
+  };
+  token: string;
+}

@@ -1,3 +1,4 @@
+// Path: types\groups.ts
 export interface ModelPermission {
   id: string;
   name: string;

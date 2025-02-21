@@ -1,11 +1,31 @@
-import React from 'react';
-import { Box, IconButton, Chip, Tooltip } from '@mui/material';
-import { Edit, ViewInAr, Lock, LockOpen, Person, Group } from '@mui/icons-material';
-import { DataTable } from '@/components/DataDisplay/DataTable';
-import type { ModelPermissionsSummary, ModelAccessLevel } from '@/types/catalog';
-import type { DataItem, Column } from '@/components/DataDisplay/DataTable';
+// Path: pages\Catalog\components\ModelPermissionsTable.tsx
+import {
+  Edit,
+  Group,
+  Lock,
+  LockOpen,
+  Person,
+  ViewInAr,
+} from '@mui/icons-material';
+import { Box, Chip, IconButton, Tooltip } from '@mui/material';
 
-type SortableFields = 'model_name' | 'model_type' | 'data_carregamento' | 'access_level' | 'user_count' | 'group_count';
+import React from 'react';
+
+import { DataTable } from '@/components/DataDisplay/DataTable';
+import type { Column, DataItem } from '@/components/DataDisplay/DataTable';
+
+import type {
+  ModelAccessLevel,
+  ModelPermissionsSummary,
+} from '@/types/catalog';
+
+type SortableFields =
+  | 'model_name'
+  | 'model_type'
+  | 'data_carregamento'
+  | 'access_level'
+  | 'user_count'
+  | 'group_count';
 type ModelPermissionsDataItem = ModelPermissionsSummary & DataItem;
 
 interface ModelPermissionsTableProps {
@@ -33,7 +53,7 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
   onSort,
   onEdit,
   onPageChange,
-  onRowsPerPageChange
+  onRowsPerPageChange,
 }) => {
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('pt-BR', {
@@ -41,7 +61,7 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
       month: 'short',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -59,15 +79,21 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
       'data_carregamento',
       'access_level',
       'user_count',
-      'group_count'
+      'group_count',
     ].includes(field);
   };
 
   const getAccessLevelIcon = (level: ModelAccessLevel) => {
-    return level === 'public' ? <LockOpen fontSize="small" /> : <Lock fontSize="small" />;
+    return level === 'public' ? (
+      <LockOpen fontSize="small" />
+    ) : (
+      <Lock fontSize="small" />
+    );
   };
 
-  const getAccessLevelColor = (level: ModelAccessLevel): "default" | "success" | "error" => {
+  const getAccessLevelColor = (
+    level: ModelAccessLevel,
+  ): 'default' | 'success' | 'error' => {
     return level === 'public' ? 'success' : 'error';
   };
 
@@ -81,26 +107,22 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
           <ViewInAr color="action" fontSize="small" />
           <span>{value as string}</span>
         </Box>
-      )
+      ),
     },
     {
       id: 'model_type',
       label: 'Tipo',
       sortable: true,
-      format: (value) => (
-        <Chip
-          label={value as string}
-          size="small"
-          variant="outlined"
-        />
-      )
+      format: value => (
+        <Chip label={value as string} size="small" variant="outlined" />
+      ),
     },
     {
       id: 'access_level',
       label: 'Acesso',
       align: 'center',
       sortable: true,
-      format: (value) => {
+      format: value => {
         const level = value as ModelAccessLevel;
         return (
           <Tooltip title={level === 'public' ? 'Público' : 'Privado'}>
@@ -113,41 +135,41 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
             />
           </Tooltip>
         );
-      }
+      },
     },
     {
       id: 'user_count',
       label: 'Usuários',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={value?.toString() || '0'} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={value?.toString() || '0'}
+          size="small"
           variant="outlined"
           icon={<Person sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'group_count',
       label: 'Grupos',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={value?.toString() || '0'} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={value?.toString() || '0'}
+          size="small"
           variant="outlined"
           icon={<Group sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'data_carregamento',
       label: 'Carregado em',
       sortable: true,
-      format: (value) => formatDate(value as Date)
+      format: value => formatDate(value as Date),
     },
     {
       id: 'actions',
@@ -163,8 +185,8 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
             <Edit fontSize="small" />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -181,7 +203,7 @@ export const ModelPermissionsTable: React.FC<ModelPermissionsTableProps> = ({
       emptyState={{
         title: 'Nenhum modelo encontrado',
         description: 'Tente ajustar os filtros da busca',
-        icon: <ViewInAr sx={{ fontSize: 48 }} />
+        icon: <ViewInAr sx={{ fontSize: 48 }} />,
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

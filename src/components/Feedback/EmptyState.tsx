@@ -1,5 +1,7 @@
+// Path: components\Feedback\EmptyState.tsx
+import { Box, Button, Typography } from '@mui/material';
+
 import React from 'react';
-import { Box, Typography, Button } from '@mui/material';
 
 interface EmptyStateProps {
   title: string;
@@ -14,7 +16,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   description,
   icon,
   actionText,
-  onAction
+  onAction,
 }) => {
   return (
     <Box
@@ -24,7 +26,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
         alignItems: 'center',
         justifyContent: 'center',
         padding: 4,
-        textAlign: 'center'
+        textAlign: 'center',
       }}
     >
       {icon && <Box sx={{ mb: 2 }}>{icon}</Box>}

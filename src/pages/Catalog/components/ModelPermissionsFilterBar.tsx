@@ -1,9 +1,20 @@
-import React, { useCallback } from 'react';
-import { FormControl, InputLabel, Select, MenuItem, SelectChangeEvent } from '@mui/material';
-import { FilterBar } from '@/components/Form/FilterBar';
-import { MemorizedSearchField } from './MemorizedSearchField';
-import { ModelAccessLevel } from '@/types/catalog';
+// Path: pages\Catalog\components\ModelPermissionsFilterBar.tsx
+import {
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+} from '@mui/material';
 import Grid from '@mui/material/Grid2';
+
+import React, { useCallback } from 'react';
+
+import { FilterBar } from '@/components/Form/FilterBar';
+
+import { ModelAccessLevel } from '@/types/catalog';
+
+import { MemorizedSearchField } from './MemorizedSearchField';
 
 interface ModelPermissionsFilterBarProps {
   search: string;
@@ -15,29 +26,29 @@ interface ModelPermissionsFilterBarProps {
   onTypeChange: (type: string) => void;
 }
 
-const MODEL_TYPES = [
-  'CESIUM_3D_TILES',
-  'KML',
-  'COLLADA',
-  'GLTF'
-];
+const MODEL_TYPES = ['CESIUM_3D_TILES', 'KML', 'COLLADA', 'GLTF'];
 
-export const ModelPermissionsFilterBar: React.FC<ModelPermissionsFilterBarProps> = ({
+export const ModelPermissionsFilterBar: React.FC<
+  ModelPermissionsFilterBarProps
+> = ({
   search,
   accessLevel,
   modelType,
   loading,
   onSearch,
   onAccessLevelChange,
-  onTypeChange
+  onTypeChange,
 }) => {
   const handleClear = useCallback(() => {
     onSearch('');
   }, [onSearch]);
 
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearch(e.target.value);
-  }, [onSearch]);
+  const handleChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onSearch(e.target.value);
+    },
+    [onSearch],
+  );
 
   const handleAccessLevelChange = (event: SelectChangeEvent) => {
     onAccessLevelChange(event.target.value as ModelAccessLevel | '');
@@ -59,7 +70,7 @@ export const ModelPermissionsFilterBar: React.FC<ModelPermissionsFilterBarProps>
             disabled={loading}
           />
         </Grid>
-        
+
         <Grid size={{ xs: 12, sm: 6, md: 4 }}>
           <FormControl fullWidth size="small">
             <InputLabel>Nível de Acesso</InputLabel>

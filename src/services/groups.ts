@@ -1,5 +1,13 @@
+// Path: services\groups.ts
+import type {
+  CreateGroupDTO,
+  GroupDetails,
+  GroupList,
+  GroupListParams,
+  UpdateGroupDTO,
+} from '@/types/groups';
+
 import { api } from './api';
-import type { GroupList, GroupDetails, CreateGroupDTO, UpdateGroupDTO, GroupListParams } from '@/types/groups';
 
 export const groupsService = {
   async list(params: GroupListParams): Promise<GroupList> {
@@ -24,5 +32,5 @@ export const groupsService = {
 
   async delete(id: string): Promise<void> {
     await api.delete(`/api/groups/${id}`);
-  }
+  },
 };

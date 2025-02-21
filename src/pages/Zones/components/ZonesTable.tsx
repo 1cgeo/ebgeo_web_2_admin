@@ -1,11 +1,20 @@
-import React from 'react';
-import { Box, IconButton, Chip } from '@mui/material';
-import { Edit, Delete, Visibility, Map, Group } from '@mui/icons-material';
-import { DataTable } from '@/components/DataDisplay/DataTable';
-import type { ZoneWithStats } from '@/types/geographic';
-import type { DataItem, Column } from '@/components/DataDisplay/DataTable';
+// Path: pages\Zones\components\ZonesTable.tsx
+import { Delete, Edit, Group, Map, Visibility } from '@mui/icons-material';
+import { Box, Chip, IconButton } from '@mui/material';
 
-type SortableFields = 'name' | 'created_at' | 'area_km2' | 'user_count' | 'group_count';
+import React from 'react';
+
+import { DataTable } from '@/components/DataDisplay/DataTable';
+import type { Column, DataItem } from '@/components/DataDisplay/DataTable';
+
+import type { ZoneWithStats } from '@/types/geographic';
+
+type SortableFields =
+  | 'name'
+  | 'created_at'
+  | 'area_km2'
+  | 'user_count'
+  | 'group_count';
 type ZoneDataItem = ZoneWithStats & DataItem;
 
 interface ZonesTableProps {
@@ -37,7 +46,7 @@ export const ZonesTable: React.FC<ZonesTableProps> = ({
   onDelete,
   onViewDetails,
   onPageChange,
-  onRowsPerPageChange
+  onRowsPerPageChange,
 }) => {
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('pt-BR', {
@@ -48,16 +57,19 @@ export const ZonesTable: React.FC<ZonesTableProps> = ({
   };
 
   const formatArea = (area: number) => {
-    return `${area.toLocaleString('pt-BR', { 
+    return `${area.toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2 
+      maximumFractionDigits: 2,
     })} km²`;
   };
 
   const sortHandler = (field: keyof ZoneDataItem) => {
-    if (typeof field === 'string' && [
-      'name', 'created_at', 'area_km2', 'user_count', 'group_count'
-    ].includes(field)) {
+    if (
+      typeof field === 'string' &&
+      ['name', 'created_at', 'area_km2', 'user_count', 'group_count'].includes(
+        field,
+      )
+    ) {
       onSort(field as SortableFields);
     }
   };
@@ -66,55 +78,55 @@ export const ZonesTable: React.FC<ZonesTableProps> = ({
     {
       id: 'name',
       label: 'Nome',
-      sortable: true
+      sortable: true,
     },
     {
       id: 'area_km2',
       label: 'Área',
       align: 'right',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={formatArea(value as number)} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={formatArea(value as number)}
+          size="small"
           variant="outlined"
           icon={<Map sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'user_count',
       label: 'Usuários',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={value?.toString() || '0'} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={value?.toString() || '0'}
+          size="small"
           variant="outlined"
           icon={<Group sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'group_count',
       label: 'Grupos',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={value?.toString() || '0'} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={value?.toString() || '0'}
+          size="small"
           variant="outlined"
           icon={<Group sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'created_at',
       label: 'Criado em',
       sortable: true,
-      format: (value) => formatDate(value as Date)
+      format: value => formatDate(value as Date),
     },
     {
       id: 'actions',
@@ -144,8 +156,8 @@ export const ZonesTable: React.FC<ZonesTableProps> = ({
             <Delete fontSize="small" />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -162,7 +174,7 @@ export const ZonesTable: React.FC<ZonesTableProps> = ({
       emptyState={{
         title: 'Nenhuma zona encontrada',
         description: 'Crie uma nova zona para começar',
-        icon: <Map sx={{ fontSize: 48 }} />
+        icon: <Map sx={{ fontSize: 48 }} />,
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

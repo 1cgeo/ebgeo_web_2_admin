@@ -1,3 +1,4 @@
+// Path: pages\Groups\components\DeleteGroupDialog.tsx
 import { ConfirmDialog } from '@/components/Feedback/ConfirmDialog';
 
 interface DeleteGroupDialogProps {
@@ -9,7 +10,7 @@ interface DeleteGroupDialogProps {
 export const DeleteGroupDialog: React.FC<DeleteGroupDialogProps> = ({
   open,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   return (
     <ConfirmDialog

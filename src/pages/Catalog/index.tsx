@@ -1,14 +1,22 @@
-import React from 'react';
+// Path: pages\Catalog\index.tsx
 import { Box } from '@mui/material';
+import type { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+
+import React from 'react';
+
 import { PageContainer } from '@/components/Layout/PageContainer';
 import { PageHeader } from '@/components/Layout/PageHeader';
-import { ModelPermissionsTable } from './components/ModelPermissionsTable';
+
+import type {
+  ModelPermissions,
+  ModelPermissionsFormData,
+} from '@/types/catalog';
+
 import { ModelPermissionsDialog } from './components/ModelPermissionsDialog';
 import { ModelPermissionsFilterBar } from './components/ModelPermissionsFilterBar';
+import { ModelPermissionsTable } from './components/ModelPermissionsTable';
 import { useModelPermissions } from './hooks/useModelPermissions';
-import type { ModelPermissionsFormData, ModelPermissions } from '@/types/catalog';
-import type { AxiosError } from 'axios';
 
 interface ApiErrorResponse {
   status?: number;
@@ -17,10 +25,13 @@ interface ApiErrorResponse {
 
 const CatalogPage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [selectedModelId, setSelectedModelId] = React.useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = React.useState<ModelPermissions | null>(null);
+  const [selectedModelId, setSelectedModelId] = React.useState<string | null>(
+    null,
+  );
+  const [selectedModel, setSelectedModel] =
+    React.useState<ModelPermissions | null>(null);
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const {
     models,
     totalCount,
@@ -40,7 +51,7 @@ const CatalogPage: React.FC = () => {
     handleSort,
     handleAccessLevelFilter,
     handleTypeFilter,
-    refetchPermissions
+    refetchPermissions,
   } = useModelPermissions();
 
   const handleEdit = async (id: string) => {
@@ -50,8 +61,8 @@ const CatalogPage: React.FC = () => {
       setSelectedModelId(id);
       setDialogOpen(true);
     } catch {
-      enqueueSnackbar('Erro ao carregar permissões do modelo', { 
-        variant: 'error'
+      enqueueSnackbar('Erro ao carregar permissões do modelo', {
+        variant: 'error',
       });
     }
   };
@@ -61,20 +72,20 @@ const CatalogPage: React.FC = () => {
 
     try {
       await updateModelPermissions(selectedModelId, data);
-      enqueueSnackbar('Permissões atualizadas com sucesso', { 
-        variant: 'success'
+      enqueueSnackbar('Permissões atualizadas com sucesso', {
+        variant: 'success',
       });
       setDialogOpen(false);
       await refetchPermissions();
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
       if (axiosError.response?.status === 403) {
-        enqueueSnackbar('Você não tem permissão para realizar esta ação', { 
-          variant: 'error'
+        enqueueSnackbar('Você não tem permissão para realizar esta ação', {
+          variant: 'error',
         });
       } else {
-        enqueueSnackbar('Erro ao atualizar permissões', { 
-          variant: 'error'
+        enqueueSnackbar('Erro ao atualizar permissões', {
+          variant: 'error',
         });
       }
     }

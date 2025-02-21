@@ -1,11 +1,11 @@
+// Path: pages\Logs\components\LogsFilterBar.tsx
+import { FormControl, MenuItem, Select } from '@mui/material';
+
 import React from 'react';
-import { 
-  FormControl, 
-  MenuItem, 
-  Select
-} from '@mui/material';
+
 import { FilterBar } from '@/components/Form/FilterBar';
-import type { LogLevel, LogCategory } from '@/types/logs';
+
+import type { LogCategory, LogLevel } from '@/types/logs';
 
 const LOG_LEVELS: LogLevel[] = ['ERROR', 'WARN', 'INFO', 'DEBUG'];
 const LOG_CATEGORIES: LogCategory[] = [
@@ -16,7 +16,7 @@ const LOG_CATEGORIES: LogCategory[] = [
   'PERFORMANCE',
   'SYSTEM',
   'ACCESS',
-  'ADMIN'
+  'ADMIN',
 ];
 
 interface LogsFilterBarProps {
@@ -34,18 +34,20 @@ export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
   limit,
   onLevelChange,
   onCategoryChange,
-  onLimitChange
+  onLimitChange,
 }) => {
   return (
     <FilterBar>
       <FormControl sx={{ minWidth: 120 }}>
         <Select
           value={level || ''}
-          onChange={(e) => onLevelChange(e.target.value as LogLevel || undefined)}
+          onChange={e =>
+            onLevelChange((e.target.value as LogLevel) || undefined)
+          }
           displayEmpty
         >
           <MenuItem value="">Todos os Níveis</MenuItem>
-          {LOG_LEVELS.map((level) => (
+          {LOG_LEVELS.map(level => (
             <MenuItem key={level} value={level}>
               {level}
             </MenuItem>
@@ -56,11 +58,13 @@ export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
       <FormControl sx={{ minWidth: 120 }}>
         <Select
           value={category || ''}
-          onChange={(e) => onCategoryChange(e.target.value as LogCategory || undefined)}
+          onChange={e =>
+            onCategoryChange((e.target.value as LogCategory) || undefined)
+          }
           displayEmpty
         >
           <MenuItem value="">Todas as Categorias</MenuItem>
-          {LOG_CATEGORIES.map((category) => (
+          {LOG_CATEGORIES.map(category => (
             <MenuItem key={category} value={category}>
               {category}
             </MenuItem>
@@ -71,7 +75,7 @@ export const LogsFilterBar: React.FC<LogsFilterBarProps> = ({
       <FormControl sx={{ width: 120 }}>
         <Select
           value={limit}
-          onChange={(e) => onLimitChange(Number(e.target.value))}
+          onChange={e => onLimitChange(Number(e.target.value))}
         >
           <MenuItem value={50}>50 registros</MenuItem>
           <MenuItem value={100}>100 registros</MenuItem>

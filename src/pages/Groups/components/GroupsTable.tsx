@@ -1,13 +1,27 @@
-import React from 'react';
-import { Box, IconButton, Chip } from '@mui/material';
-import { Edit, Delete, Group, Visibility } from '@mui/icons-material';
-import { DataTable } from '@/components/DataDisplay/DataTable';
-import type { GroupDetails, ZonePermission, ModelPermission } from '@/types/groups';
-import type { DataItem, Column } from '@/components/DataDisplay/DataTable';
-import ViewInArIcon from '@mui/icons-material/ViewInAr';
+// Path: pages\Groups\components\GroupsTable.tsx
+import { Delete, Edit, Group, Visibility } from '@mui/icons-material';
 import Map from '@mui/icons-material/Map';
+import ViewInArIcon from '@mui/icons-material/ViewInAr';
+import { Box, Chip, IconButton } from '@mui/material';
 
-type SortableFields = 'name' | 'member_count' | 'created_at' | 'updated_at' | 'model_permissions_count' | 'zone_permissions_count';
+import React from 'react';
+
+import { DataTable } from '@/components/DataDisplay/DataTable';
+import type { Column, DataItem } from '@/components/DataDisplay/DataTable';
+
+import type {
+  GroupDetails,
+  ModelPermission,
+  ZonePermission,
+} from '@/types/groups';
+
+type SortableFields =
+  | 'name'
+  | 'member_count'
+  | 'created_at'
+  | 'updated_at'
+  | 'model_permissions_count'
+  | 'zone_permissions_count';
 type GroupDataItem = GroupDetails & DataItem;
 
 interface GroupsTableProps {
@@ -39,7 +53,7 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
   onDelete,
   onViewDetails,
   onPageChange,
-  onRowsPerPageChange
+  onRowsPerPageChange,
 }) => {
   const formatDate = (date: Date) => {
     return new Date(date).toLocaleDateString('pt-BR', {
@@ -51,7 +65,10 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
 
   // Type-safe sort handler
   const sortHandler = (field: keyof GroupDataItem) => {
-    if (typeof field === 'string' && ['name', 'member_count', 'created_at', 'updated_at'].includes(field)) {
+    if (
+      typeof field === 'string' &&
+      ['name', 'member_count', 'created_at', 'updated_at'].includes(field)
+    ) {
       onSort(field as SortableFields);
     }
   };
@@ -60,61 +77,61 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
     {
       id: 'name',
       label: 'Nome',
-      sortable: true
+      sortable: true,
     },
     {
       id: 'member_count',
       label: 'Membros',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={value?.toString() || '0'} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={value?.toString() || '0'}
+          size="small"
           variant="outlined"
           icon={<Group sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'model_permissions_count',
       label: 'Permissões de modelos',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={`${(value as ModelPermission[]).length || 0}`} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={`${(value as ModelPermission[]).length || 0}`}
+          size="small"
           variant="outlined"
           icon={<ViewInArIcon sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'zone_permissions_count',
       label: 'Permissões de zonas',
       align: 'center',
       sortable: true,
-      format: (value) => (
-        <Chip 
-          label={`${(value as ZonePermission[]).length || 0}`} 
-          size="small" 
+      format: value => (
+        <Chip
+          label={`${(value as ZonePermission[]).length || 0}`}
+          size="small"
           variant="outlined"
           icon={<Map sx={{ fontSize: 16 }} />}
         />
-      )
+      ),
     },
     {
       id: 'created_at',
       label: 'Criado em',
       sortable: true,
-      format: (value) => formatDate(value as Date)
+      format: value => formatDate(value as Date),
     },
     {
       id: 'updated_at',
       label: 'Atualizado em',
       sortable: true,
-      format: (value) => formatDate(value as Date)
+      format: value => formatDate(value as Date),
     },
     {
       id: 'actions',
@@ -144,8 +161,8 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
             <Delete fontSize="small" />
           </IconButton>
         </Box>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -162,7 +179,7 @@ export const GroupsTable: React.FC<GroupsTableProps> = ({
       emptyState={{
         title: 'Nenhum grupo encontrado',
         description: 'Crie um novo grupo para começar',
-        icon: <Group sx={{ fontSize: 48 }} />
+        icon: <Group sx={{ fontSize: 48 }} />,
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

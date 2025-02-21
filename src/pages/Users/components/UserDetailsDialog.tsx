@@ -1,32 +1,35 @@
-import React from 'react';
+// Path: pages\Users\components\UserDetailsDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  Divider
-} from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import {
-  Person,
+  AccountBox,
+  AdminPanelSettings,
+  Badge,
+  Business,
   Group as GroupIcon,
   ViewInAr as ModelIcon,
-  LocationOn as ZoneIcon,
-  AdminPanelSettings,
+  Person,
   VerifiedUser,
-  Badge,
-  AccountBox,
-  Business
+  LocationOn as ZoneIcon,
 } from '@mui/icons-material';
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
+import React from 'react';
+
 import type { UserDetails } from '@/types/users';
 
 interface UserDetailsDialogProps {
@@ -38,7 +41,7 @@ interface UserDetailsDialogProps {
 export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
   open,
   user,
-  onClose
+  onClose,
 }) => {
   if (!user) return null;
 
@@ -49,23 +52,20 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
       month: 'long',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   return (
-    <Dialog 
-      open={open}
-      onClose={onClose}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>
-          {user.role === 'admin' ? <AdminPanelSettings color="primary" /> : <Person />}
-          <Typography variant="h6">
-            Detalhes do Usuário
-          </Typography>
+          {user.role === 'admin' ? (
+            <AdminPanelSettings color="primary" />
+          ) : (
+            <Person />
+          )}
+          <Typography variant="h6">Detalhes do Usuário</Typography>
         </Box>
       </DialogTitle>
 
@@ -92,7 +92,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
                     </Typography>
                   </Box>
                 </Grid>
-                
+
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <Typography variant="body2" color="text.secondary">
                     <strong>Último acesso:</strong> {formatDate(user.lastLogin)}
@@ -120,7 +120,8 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
                   <Box display="flex" alignItems="center" gap={1} mb={1}>
                     <AccountBox fontSize="small" color="action" />
                     <Typography variant="body1">
-                      <strong>Nome Completo:</strong> {user.nome_completo || '-'}
+                      <strong>Nome Completo:</strong>{' '}
+                      {user.nome_completo || '-'}
                     </Typography>
                   </Box>
                   <Box display="flex" alignItems="center" gap={1}>
@@ -130,12 +131,13 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
                     </Typography>
                   </Box>
                 </Grid>
-                
+
                 <Grid size={{ xs: 12, sm: 6 }}>
                   <Box display="flex" alignItems="center" gap={1}>
                     <Business fontSize="small" color="action" />
                     <Typography variant="body1">
-                      <strong>Organização Militar:</strong> {user.organizacao_militar || '-'}
+                      <strong>Organização Militar:</strong>{' '}
+                      {user.organizacao_militar || '-'}
                     </Typography>
                   </Box>
                 </Grid>
@@ -159,7 +161,9 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
                 color={user.isActive ? 'success' : 'error'}
               />
               <Chip
-                icon={user.role === 'admin' ? <AdminPanelSettings /> : <Person />}
+                icon={
+                  user.role === 'admin' ? <AdminPanelSettings /> : <Person />
+                }
                 label={user.role === 'admin' ? 'Administrador' : 'Usuário'}
                 color={user.role === 'admin' ? 'primary' : 'default'}
               />
@@ -177,7 +181,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               Grupos
             </Typography>
             <List>
-              {user.groups.map((group) => (
+              {user.groups.map(group => (
                 <ListItem key={group.id} divider>
                   <ListItemAvatar>
                     <Avatar>
@@ -192,9 +196,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               ))}
               {user.groups.length === 0 && (
                 <ListItem>
-                  <ListItemText
-                    secondary="Usuário não pertence a nenhum grupo"
-                  />
+                  <ListItemText secondary="Usuário não pertence a nenhum grupo" />
                 </ListItem>
               )}
             </List>
@@ -206,7 +208,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               Acesso a Modelos ({user.permissions.models.count})
             </Typography>
             <List>
-              {user.permissions.models.items.map((permission) => (
+              {user.permissions.models.items.map(permission => (
                 <ListItem key={permission.id} divider>
                   <ListItemAvatar>
                     <Avatar>
@@ -221,9 +223,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               ))}
               {user.permissions.models.items.length === 0 && (
                 <ListItem>
-                  <ListItemText
-                    secondary="Sem acesso a modelos"
-                  />
+                  <ListItemText secondary="Sem acesso a modelos" />
                 </ListItem>
               )}
             </List>
@@ -235,7 +235,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               Acesso a Zonas ({user.permissions.zones.count})
             </Typography>
             <List>
-              {user.permissions.zones.items.map((permission) => (
+              {user.permissions.zones.items.map(permission => (
                 <ListItem key={permission.id} divider>
                   <ListItemAvatar>
                     <Avatar>
@@ -250,9 +250,7 @@ export const UserDetailsDialog: React.FC<UserDetailsDialogProps> = ({
               ))}
               {user.permissions.zones.items.length === 0 && (
                 <ListItem>
-                  <ListItemText
-                    secondary="Sem acesso a zonas"
-                  />
+                  <ListItemText secondary="Sem acesso a zonas" />
                 </ListItem>
               )}
             </List>

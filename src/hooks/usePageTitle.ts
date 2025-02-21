@@ -1,4 +1,6 @@
+// Path: hooks\usePageTitle.ts
 import { useEffect } from 'react';
+
 import { useGlobal } from '@/context/GlobalContext';
 
 export const usePageTitle = (title: string) => {

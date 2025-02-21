@@ -1,3 +1,4 @@
+// Path: pages\Zones\components\DeleteZoneDialog.tsx
 import { ConfirmDialog } from '@/components/Feedback/ConfirmDialog';
 
 interface DeleteZoneDialogProps {
@@ -9,7 +10,7 @@ interface DeleteZoneDialogProps {
 export const DeleteZoneDialog: React.FC<DeleteZoneDialogProps> = ({
   open,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   return (
     <ConfirmDialog

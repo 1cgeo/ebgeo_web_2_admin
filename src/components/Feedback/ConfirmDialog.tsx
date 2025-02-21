@@ -1,12 +1,14 @@
-import React from 'react';
+// Path: components\Feedback\ConfirmDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  Typography
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Typography,
 } from '@mui/material';
+
+import React from 'react';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -27,7 +29,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   cancelText = 'Cancelar',
   onConfirm,
   onCancel,
-  loading = false
+  loading = false,
 }) => {
   return (
     <Dialog open={open} onClose={onCancel} maxWidth="xs" fullWidth>

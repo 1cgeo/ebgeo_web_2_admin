@@ -1,6 +1,8 @@
+// Path: components\Form\SearchField.tsx
+import { Clear as ClearIcon, Search as SearchIcon } from '@mui/icons-material';
+import { IconButton, InputAdornment, TextField } from '@mui/material';
+
 import React from 'react';
-import { TextField, InputAdornment, IconButton } from '@mui/material';
-import { Search as SearchIcon, Clear as ClearIcon } from '@mui/icons-material';
 
 interface SearchFieldProps {
   value: string;
@@ -15,7 +17,7 @@ export const SearchField: React.FC<SearchFieldProps> = ({
   onChange,
   onClear,
   placeholder = 'Buscar...',
-  disabled = false
+  disabled = false,
 }) => {
   return (
     <TextField
@@ -34,15 +36,11 @@ export const SearchField: React.FC<SearchFieldProps> = ({
         ),
         endAdornment: value ? (
           <InputAdornment position="end">
-            <IconButton
-              size="small"
-              onClick={onClear}
-              disabled={disabled}
-            >
+            <IconButton size="small" onClick={onClear} disabled={disabled}>
               <ClearIcon />
             </IconButton>
           </InputAdornment>
-        ) : null
+        ) : null,
       }}
     />
   );

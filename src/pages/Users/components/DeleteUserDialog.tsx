@@ -1,5 +1,8 @@
+// Path: pages\Users\components\DeleteUserDialog.tsx
 import React from 'react';
+
 import { ConfirmDialog } from '@/components/Feedback/ConfirmDialog';
+
 import type { UserDetails } from '@/types/users';
 
 interface DeleteUserDialogProps {
@@ -13,7 +16,7 @@ export const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({
   open,
   user,
   onClose,
-  onConfirm
+  onConfirm,
 }) => {
   if (!user) return null;
 
@@ -27,10 +30,14 @@ export const DeleteUserDialog: React.FC<DeleteUserDialogProps> = ({
       message={
         isAdmin
           ? `Tem certeza que deseja ${isActive ? 'desativar' : 'ativar'} o administrador "${user.username}"? ${
-              isActive ? 'Ele perderá acesso ao sistema.' : 'Ele voltará a ter acesso ao sistema.'
+              isActive
+                ? 'Ele perderá acesso ao sistema.'
+                : 'Ele voltará a ter acesso ao sistema.'
             }`
           : `Tem certeza que deseja ${isActive ? 'desativar' : 'ativar'} o usuário "${user.username}"? ${
-              isActive ? 'Ele perderá acesso ao sistema.' : 'Ele voltará a ter acesso ao sistema.'
+              isActive
+                ? 'Ele perderá acesso ao sistema.'
+                : 'Ele voltará a ter acesso ao sistema.'
             }`
       }
       confirmText={isActive ? 'Desativar' : 'Ativar'}

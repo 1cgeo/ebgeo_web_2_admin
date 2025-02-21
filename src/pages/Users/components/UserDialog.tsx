@@ -1,28 +1,31 @@
-import React, { useState, useEffect, useCallback } from 'react';
+// Path: pages\Users\components\UserDialog.tsx
+import { Visibility, VisibilityOff } from '@mui/icons-material';
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Button,
-  TextField,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
   FormHelperText,
   IconButton,
   InputAdornment,
-  Typography
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
 } from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { SelectChangeEvent } from '@mui/material';
 import { Autocomplete } from '@mui/material';
+import Grid from '@mui/material/Grid2';
+
+import React, { useCallback, useEffect, useState } from 'react';
+
 import { groupsService } from '@/services/groups';
 import { usersService } from '@/services/users';
-import type { FormData } from '@/types/users';
 import type { GroupDetails } from '@/types/groups';
+import type { FormData } from '@/types/users';
 
 interface UserDialogProps {
   open: boolean;
@@ -51,14 +54,14 @@ const initialFormData: FormData = {
   password: '',
   confirmPassword: '',
   role: 'user',
-  groupIds: []
+  groupIds: [],
 };
 
 export const UserDialog: React.FC<UserDialogProps> = ({
   open,
   userId,
   onClose,
-  onSubmit
+  onSubmit,
 }) => {
   const [formData, setFormData] = useState<FormData>(initialFormData);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -78,7 +81,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
 
   const fetchUserDetails = useCallback(async () => {
     if (!userId) return;
-    
+
     try {
       setLoading(true);
       const user = await usersService.getDetails(userId);
@@ -91,7 +94,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
         password: '',
         confirmPassword: '',
         role: user.role,
-        groupIds: user.groups.map(group => group.id)
+        groupIds: user.groups.map(group => group.id),
       });
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -127,7 +130,8 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       newErrors.email = 'Email inválido';
     }
 
-    if (!userId) { // Validar senha apenas na criação
+    if (!userId) {
+      // Validar senha apenas na criação
       if (!formData.password) {
         newErrors.password = 'Senha é obrigatória';
       } else if (formData.password.length < 6) {
@@ -140,15 +144,20 @@ export const UserDialog: React.FC<UserDialogProps> = ({
     }
 
     if (formData.nome_completo && formData.nome_completo.length > 255) {
-      newErrors.nome_completo = 'Nome completo deve ter no máximo 255 caracteres';
+      newErrors.nome_completo =
+        'Nome completo deve ter no máximo 255 caracteres';
     }
 
     if (formData.nome_guerra && formData.nome_guerra.length > 50) {
       newErrors.nome_guerra = 'Nome de guerra deve ter no máximo 50 caracteres';
     }
 
-    if (formData.organizacao_militar && formData.organizacao_militar.length > 255) {
-      newErrors.organizacao_militar = 'Organização militar deve ter no máximo 255 caracteres';
+    if (
+      formData.organizacao_militar &&
+      formData.organizacao_militar.length > 255
+    ) {
+      newErrors.organizacao_militar =
+        'Organização militar deve ter no máximo 255 caracteres';
     }
 
     setErrors(newErrors);
@@ -157,7 +166,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     await onSubmit(formData);
@@ -172,24 +181,25 @@ export const UserDialog: React.FC<UserDialogProps> = ({
   };
 
   const handleRoleChange = (event: SelectChangeEvent<'admin' | 'user'>) => {
-    setFormData(prev => ({ ...prev, role: event.target.value as 'admin' | 'user' }));
+    setFormData(prev => ({
+      ...prev,
+      role: event.target.value as 'admin' | 'user',
+    }));
   };
 
   return (
-    <Dialog 
-      open={open} 
+    <Dialog
+      open={open}
       onClose={onClose}
       maxWidth="md"
       fullWidth
       PaperProps={{
         component: 'form',
-        onSubmit: handleSubmit
+        onSubmit: handleSubmit,
       }}
     >
-      <DialogTitle>
-        {userId ? 'Editar Usuário' : 'Novo Usuário'}
-      </DialogTitle>
-      
+      <DialogTitle>{userId ? 'Editar Usuário' : 'Novo Usuário'}</DialogTitle>
+
       <DialogContent>
         <Grid container spacing={2} sx={{ mt: 1 }}>
           {/* Informações básicas */}
@@ -229,7 +239,12 @@ export const UserDialog: React.FC<UserDialogProps> = ({
 
           {/* Dados Pessoais */}
           <Grid size={{ xs: 12 }}>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              gutterBottom
+              sx={{ mt: 2 }}
+            >
               Dados Pessoais
             </Typography>
           </Grid>
@@ -272,7 +287,12 @@ export const UserDialog: React.FC<UserDialogProps> = ({
 
           {/* Perfil e grupos */}
           <Grid size={{ xs: 12 }}>
-            <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+            <Typography
+              variant="subtitle2"
+              color="text.secondary"
+              gutterBottom
+              sx={{ mt: 2 }}
+            >
               Perfil e Grupos
             </Typography>
           </Grid>
@@ -299,20 +319,18 @@ export const UserDialog: React.FC<UserDialogProps> = ({
             <Autocomplete
               multiple
               options={groups}
-              getOptionLabel={(option) => option.name}
-              value={groups.filter(group => formData.groupIds.includes(group.id))}
+              getOptionLabel={option => option.name}
+              value={groups.filter(group =>
+                formData.groupIds.includes(group.id),
+              )}
               onChange={(_, newValue) => {
                 setFormData(prev => ({
                   ...prev,
-                  groupIds: newValue.map(group => group.id)
+                  groupIds: newValue.map(group => group.id),
                 }));
               }}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Grupos"
-                  fullWidth
-                />
+              renderInput={params => (
+                <TextField {...params} label="Grupos" fullWidth />
               )}
             />
           </Grid>
@@ -321,7 +339,12 @@ export const UserDialog: React.FC<UserDialogProps> = ({
           {(!userId || formData.password) && (
             <>
               <Grid size={{ xs: 12 }}>
-                <Typography variant="subtitle2" color="text.secondary" gutterBottom sx={{ mt: 2 }}>
+                <Typography
+                  variant="subtitle2"
+                  color="text.secondary"
+                  gutterBottom
+                  sx={{ mt: 2 }}
+                >
                   Senha
                 </Typography>
               </Grid>
@@ -329,7 +352,7 @@ export const UserDialog: React.FC<UserDialogProps> = ({
               <Grid size={{ xs: 12, sm: 6 }}>
                 <TextField
                   name="password"
-                  label={userId ? "Nova Senha" : "Senha"}
+                  label={userId ? 'Nova Senha' : 'Senha'}
                   type={showPassword ? 'text' : 'password'}
                   value={formData.password}
                   onChange={handleChange}
@@ -367,10 +390,16 @@ export const UserDialog: React.FC<UserDialogProps> = ({
                     endAdornment: (
                       <InputAdornment position="end">
                         <IconButton
-                          onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                          onClick={() =>
+                            setShowConfirmPassword(!showConfirmPassword)
+                          }
                           edge="end"
                         >
-                          {showConfirmPassword ? <VisibilityOff /> : <Visibility />}
+                          {showConfirmPassword ? (
+                            <VisibilityOff />
+                          ) : (
+                            <Visibility />
+                          )}
                         </IconButton>
                       </InputAdornment>
                     ),
@@ -383,14 +412,8 @@ export const UserDialog: React.FC<UserDialogProps> = ({
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={onClose}>
-          Cancelar
-        </Button>
-        <Button 
-          type="submit"
-          variant="contained"
-          disabled={loading}
-        >
+        <Button onClick={onClose}>Cancelar</Button>
+        <Button type="submit" variant="contained" disabled={loading}>
           {loading ? 'Salvando...' : 'Salvar'}
         </Button>
       </DialogActions>

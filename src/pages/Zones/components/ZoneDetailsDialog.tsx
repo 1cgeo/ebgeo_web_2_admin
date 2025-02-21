@@ -1,29 +1,32 @@
-import React from 'react';
+// Path: pages\Zones\components\ZoneDetailsDialog.tsx
 import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Typography,
-  Box,
-  Chip,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar
-} from '@mui/material';
-import Grid from '@mui/material/Grid2';
-import {
+  Group as GroupIcon,
   Map as MapIcon,
   Person as PersonIcon,
-  Group as GroupIcon
 } from '@mui/icons-material';
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
+import {
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
+} from '@mui/material';
+import Grid from '@mui/material/Grid2';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import type { ZoneWithStats, ZonePermissions } from '@/types/geographic';
+
+import React from 'react';
+import { GeoJSON, MapContainer, TileLayer } from 'react-leaflet';
+
+import type { ZonePermissions, ZoneWithStats } from '@/types/geographic';
 
 interface ZoneDetailsDialogProps {
   open: boolean;
@@ -36,12 +39,12 @@ export const ZoneDetailsDialog: React.FC<ZoneDetailsDialogProps> = ({
   open,
   zone,
   permissions,
-  onClose
+  onClose,
 }) => {
   // Calculate bounds for map
   const bounds = React.useMemo<L.LatLngBounds | undefined>(() => {
     if (!zone?.geom) return undefined;
-    
+
     try {
       const geoJsonLayer = L.geoJSON(zone.geom);
       return geoJsonLayer.getBounds();
@@ -59,30 +62,23 @@ export const ZoneDetailsDialog: React.FC<ZoneDetailsDialogProps> = ({
       month: 'long',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
   const formatArea = (area: number) => {
     return area.toLocaleString('pt-BR', {
       minimumFractionDigits: 2,
-      maximumFractionDigits: 2
+      maximumFractionDigits: 2,
     });
   };
 
   return (
-    <Dialog 
-      open={open}
-      onClose={onClose}
-      maxWidth="lg"
-      fullWidth
-    >
+    <Dialog open={open} onClose={onClose} maxWidth="lg" fullWidth>
       <DialogTitle>
         <Box display="flex" alignItems="center" gap={1}>
           <MapIcon color="primary" />
-          <Typography variant="h6">
-            Detalhes da Zona
-          </Typography>
+          <Typography variant="h6">Detalhes da Zona</Typography>
         </Box>
       </DialogTitle>
 
@@ -133,19 +129,24 @@ export const ZoneDetailsDialog: React.FC<ZoneDetailsDialogProps> = ({
           </Grid>
 
           {/* Mapa */}
-          <Grid size={{ xs: 12}}>
+          <Grid size={{ xs: 12 }}>
             <Typography variant="subtitle1" fontWeight="bold" gutterBottom>
               Visualização
             </Typography>
-            <Box sx={{ height: 400, width: '100%', borderRadius: 1, overflow: 'hidden' }}>
+            <Box
+              sx={{
+                height: 400,
+                width: '100%',
+                borderRadius: 1,
+                overflow: 'hidden',
+              }}
+            >
               {bounds && (
                 <MapContainer
                   bounds={bounds}
                   style={{ height: '100%', width: '100%' }}
                 >
-                  <TileLayer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                  />
+                  <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                   <GeoJSON data={zone.geom} />
                 </MapContainer>
               )}
@@ -158,16 +159,14 @@ export const ZoneDetailsDialog: React.FC<ZoneDetailsDialogProps> = ({
               Usuários com Acesso
             </Typography>
             <List>
-              {permissions.user_permissions.map((user) => (
+              {permissions.user_permissions.map(user => (
                 <ListItem key={user.id} divider>
                   <ListItemAvatar>
                     <Avatar>
                       <PersonIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText
-                    primary={user.username}
-                  />
+                  <ListItemText primary={user.username} />
                 </ListItem>
               ))}
               {permissions.user_permissions.length === 0 && (
@@ -187,16 +186,14 @@ export const ZoneDetailsDialog: React.FC<ZoneDetailsDialogProps> = ({
               Grupos com Acesso
             </Typography>
             <List>
-              {permissions.group_permissions.map((group) => (
+              {permissions.group_permissions.map(group => (
                 <ListItem key={group.id} divider>
                   <ListItemAvatar>
                     <Avatar>
                       <GroupIcon />
                     </Avatar>
                   </ListItemAvatar>
-                  <ListItemText
-                    primary={group.name}
-                  />
+                  <ListItemText primary={group.name} />
                 </ListItem>
               ))}
               {permissions.group_permissions.length === 0 && (

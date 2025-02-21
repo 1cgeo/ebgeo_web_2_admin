@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useReducer, Dispatch } from 'react';
+// Path: context\GlobalContext.tsx
+import React, { Dispatch, createContext, useContext, useReducer } from 'react';
 
 interface GlobalState {
   pageTitle: string;
@@ -17,15 +18,18 @@ type ActionType =
   | { type: 'SET_PAGE_TITLE'; payload: string }
   | { type: 'TOGGLE_SIDEBAR' }
   | { type: 'SET_LOADING'; payload: { key: string; value: boolean } }
-  | { type: 'SET_BREADCRUMBS'; payload: Array<{ text: string; href?: string }> };
+  | {
+      type: 'SET_BREADCRUMBS';
+      payload: Array<{ text: string; href?: string }>;
+    };
 
 const initialState: GlobalState = {
   pageTitle: '',
   showSidebar: true,
   loading: {
-    global: false
+    global: false,
   },
-  breadcrumbs: []
+  breadcrumbs: [],
 };
 
 const GlobalContext = createContext<{
@@ -33,7 +37,7 @@ const GlobalContext = createContext<{
   dispatch: Dispatch<ActionType>;
 }>({
   state: initialState,
-  dispatch: () => null
+  dispatch: () => null,
 });
 
 function globalReducer(state: GlobalState, action: ActionType): GlobalState {
@@ -41,32 +45,34 @@ function globalReducer(state: GlobalState, action: ActionType): GlobalState {
     case 'SET_PAGE_TITLE':
       return {
         ...state,
-        pageTitle: action.payload
+        pageTitle: action.payload,
       };
     case 'TOGGLE_SIDEBAR':
       return {
         ...state,
-        showSidebar: !state.showSidebar
+        showSidebar: !state.showSidebar,
       };
     case 'SET_LOADING':
       return {
         ...state,
         loading: {
           ...state.loading,
-          [action.payload.key]: action.payload.value
-        }
+          [action.payload.key]: action.payload.value,
+        },
       };
     case 'SET_BREADCRUMBS':
       return {
         ...state,
-        breadcrumbs: action.payload
+        breadcrumbs: action.payload,
       };
     default:
       return state;
   }
 }
 
-export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const GlobalProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [state, dispatch] = useReducer(globalReducer, initialState);
 
   return (

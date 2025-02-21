@@ -1,5 +1,8 @@
-import React, { Suspense } from 'react';
+// Path: pages\Dashboard\index.tsx
 import { Box, Fade } from '@mui/material';
+
+import React, { Suspense } from 'react';
+
 import { DashboardSkeleton } from '@/components/Loading/DashboardSkeleton';
 
 const DashboardContent = React.lazy(() => import('./DashboardContent'));
@@ -20,9 +23,10 @@ const DashboardPage = () => {
       sx={{
         flexGrow: 1,
         backgroundColor: theme => theme.palette.background.default,
-        transition: theme => theme.transitions.create('background-color', {
-          duration: theme.transitions.duration.standard,
-        }),
+        transition: theme =>
+          theme.transitions.create('background-color', {
+            duration: theme.transitions.duration.standard,
+          }),
       }}
     >
       <Fade in={!isLoading} timeout={500}>

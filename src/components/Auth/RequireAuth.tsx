@@ -1,14 +1,20 @@
+// Path: components\Auth\RequireAuth.tsx
+import { Box, CircularProgress } from '@mui/material';
+
 import React, { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+
 import { useAuth } from '@/context/AuthContext';
-import { Box, CircularProgress } from '@mui/material';
 
 interface RequireAuthProps {
   children: React.ReactNode;
   requireAdmin?: boolean;
 }
 
-export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireAdmin = false }) => {
+export const RequireAuth: React.FC<RequireAuthProps> = ({
+  children,
+  requireAdmin = false,
+}) => {
   const { isAuthenticated, user, loading } = useAuth();
   const location = useLocation();
   const { logout } = useAuth();
@@ -17,9 +23,12 @@ export const RequireAuth: React.FC<RequireAuthProps> = ({ children, requireAdmin
     let inactivityTimer: ReturnType<typeof setTimeout>;
     const resetTimer = () => {
       if (inactivityTimer) clearTimeout(inactivityTimer);
-      inactivityTimer = setTimeout(() => {
-        logout();
-      }, 30 * 60 * 1000);
+      inactivityTimer = setTimeout(
+        () => {
+          logout();
+        },
+        30 * 60 * 1000,
+      );
     };
 
     if (isAuthenticated) {

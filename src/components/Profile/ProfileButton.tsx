@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+// Path: components\Profile\ProfileButton.tsx
 import { AccountCircle } from '@mui/icons-material';
+import { IconButton, Tooltip } from '@mui/material';
+
+import React, { useState } from 'react';
+
 import { ProfileDialog } from './ProfileDialog';
 
 export const ProfileButton: React.FC = () => {
@@ -12,19 +15,12 @@ export const ProfileButton: React.FC = () => {
   return (
     <>
       <Tooltip title="Perfil">
-        <IconButton 
-          color="inherit" 
-          onClick={handleOpen}
-          sx={{ mr: 1 }}
-        >
+        <IconButton color="inherit" onClick={handleOpen} sx={{ mr: 1 }}>
           <AccountCircle />
         </IconButton>
       </Tooltip>
 
-      <ProfileDialog
-        open={open}
-        onClose={handleClose}
-      />
+      <ProfileDialog open={open} onClose={handleClose} />
     </>
   );
 };

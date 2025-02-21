@@ -1,19 +1,27 @@
-import React from 'react';
+// Path: pages\Audit\index.tsx
 import { Box } from '@mui/material';
+
+import React from 'react';
+
 import { PageContainer } from '@/components/Layout/PageContainer';
 import { PageHeader } from '@/components/Layout/PageHeader';
-import { AuditTable } from './components/AuditTable';
-import { AuditFilterBar } from './components/AuditFilterBar';
-import { AuditDetailsDialog } from './components/AuditDetailsDialog';
-import { useAudit } from './hooks/useAudit';
+
 import { usePageTitle } from '@/hooks/usePageTitle';
+
 import type { AuditEntry } from '@/types/audit';
+
+import { AuditDetailsDialog } from './components/AuditDetailsDialog';
+import { AuditFilterBar } from './components/AuditFilterBar';
+import { AuditTable } from './components/AuditTable';
+import { useAudit } from './hooks/useAudit';
 
 const AuditPage: React.FC = () => {
   usePageTitle('Trilha de Auditoria');
 
-  const [selectedEntry, setSelectedEntry] = React.useState<AuditEntry | null>(null);
-  
+  const [selectedEntry, setSelectedEntry] = React.useState<AuditEntry | null>(
+    null,
+  );
+
   const {
     entries,
     totalCount,
@@ -28,7 +36,7 @@ const AuditPage: React.FC = () => {
     handleSearch,
     handleDateRangeChange,
     handleActionChange,
-    clearFilters
+    clearFilters,
   } = useAudit();
 
   const handleViewDetails = (entry: AuditEntry) => {

@@ -1,36 +1,40 @@
-import { useState } from 'react';
-import { Outlet, Link } from 'react-router-dom';
+// Path: layouts\DashboardLayout.tsx
 import {
-  Box,
-  Drawer,
+  History as AuditIcon,
+  ViewInAr as CatalogIcon,
+  DarkMode,
+  Dashboard as DashboardIcon,
+  Group as GroupIcon,
+  LightMode,
+  Logout as LogoutIcon,
+  Article as LogsIcon,
+  Menu as MenuIcon,
+  Person as PersonIcon,
+  Map as ZoneIcon,
+} from '@mui/icons-material';
+import {
   AppBar,
-  Toolbar,
-  IconButton,
-  Typography,
+  Box,
   Divider,
+  Drawer,
+  IconButton,
   List,
   ListItem,
   ListItemIcon,
   ListItemText,
+  Toolbar,
+  Typography,
+  useMediaQuery,
   useTheme,
-  useMediaQuery
 } from '@mui/material';
-import {
-  Menu as MenuIcon,
-  Dashboard as DashboardIcon,
-  Group as GroupIcon,
-  Person as PersonIcon,
-  ViewInAr as CatalogIcon,
-  Map as ZoneIcon,
-  Article as LogsIcon,
-  History as AuditIcon,
-  Logout as LogoutIcon,
-  DarkMode,
-  LightMode
-} from '@mui/icons-material';
+
+import { useState } from 'react';
+import { Link, Outlet } from 'react-router-dom';
+
+import { ProfileButton } from '@/components/Profile/ProfileButton';
+
 import { useAuth } from '@/context/AuthContext';
 import { useTheme as useAppTheme } from '@/context/ThemeContext';
-import { ProfileButton } from '@/components/Profile/ProfileButton';
 
 const drawerWidth = 240;
 
@@ -54,44 +58,44 @@ const DashboardLayout = () => {
       title: 'Dashboard',
       path: '/dashboard',
       icon: <DashboardIcon />,
-      section: 'main'
+      section: 'main',
     },
     {
       title: 'Usuários',
       path: '/users',
       icon: <PersonIcon />,
-      section: 'admin'
+      section: 'admin',
     },
     {
       title: 'Grupos',
       path: '/groups',
       icon: <GroupIcon />,
-      section: 'admin'
+      section: 'admin',
     },
     {
       title: 'Catálogo 3D',
       path: '/catalog',
       icon: <CatalogIcon />,
-      section: 'resources'
+      section: 'resources',
     },
     {
       title: 'Zonas Geográficas',
       path: '/zones',
       icon: <ZoneIcon />,
-      section: 'resources'
+      section: 'resources',
     },
     {
       title: 'Logs do Sistema',
       path: '/logs',
       icon: <LogsIcon />,
-      section: 'monitoring'
+      section: 'monitoring',
     },
     {
       title: 'Trilha de Auditoria',
       path: '/audit',
       icon: <AuditIcon />,
-      section: 'monitoring'
-    }
+      section: 'monitoring',
+    },
   ];
 
   const drawer = (
@@ -101,30 +105,35 @@ const DashboardLayout = () => {
       </Toolbar>
       <Divider />
       <List>
-        {menuItems.map((item) => (
+        {menuItems.map(item => (
           <ListItem
-          key={item.path}
-          component={Link}
-          to={item.path}
-          sx={{
-            cursor: 'pointer',
-            '& .MuiListItemText-primary': {
-              color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
-            },
-            '&:hover': {
-              backgroundColor: theme => theme.palette.mode === 'dark'
-                ? 'rgba(255, 255, 255, 0.08)'
-                : 'rgba(0, 0, 0, 0.04)'
-            }
-          }}
-        >
-          <ListItemIcon sx={{
-            color: theme => theme.palette.mode === 'dark' ? '#fff' : '#000'
-          }}>
-            {item.icon}
-          </ListItemIcon>
-          <ListItemText primary={item.title} />
-        </ListItem>
+            key={item.path}
+            component={Link}
+            to={item.path}
+            sx={{
+              cursor: 'pointer',
+              '& .MuiListItemText-primary': {
+                color: theme =>
+                  theme.palette.mode === 'dark' ? '#fff' : '#000',
+              },
+              '&:hover': {
+                backgroundColor: theme =>
+                  theme.palette.mode === 'dark'
+                    ? 'rgba(255, 255, 255, 0.08)'
+                    : 'rgba(0, 0, 0, 0.04)',
+              },
+            }}
+          >
+            <ListItemIcon
+              sx={{
+                color: theme =>
+                  theme.palette.mode === 'dark' ? '#fff' : '#000',
+              }}
+            >
+              {item.icon}
+            </ListItemIcon>
+            <ListItemText primary={item.title} />
+          </ListItem>
         ))}
       </List>
     </div>
@@ -136,7 +145,7 @@ const DashboardLayout = () => {
         position="fixed"
         sx={{
           width: { md: `calc(100% - ${drawerWidth}px)` },
-          ml: { md: `${drawerWidth}px` }
+          ml: { md: `${drawerWidth}px` },
         }}
       >
         <Toolbar>
@@ -160,11 +169,7 @@ const DashboardLayout = () => {
             {themeMode === 'dark' ? <LightMode /> : <DarkMode />}
           </IconButton>
           <ProfileButton />
-          <IconButton
-            color="inherit"
-            onClick={handleLogout}
-            title="Sair"
-          >
+          <IconButton color="inherit" onClick={handleLogout} title="Sair">
             <LogoutIcon />
           </IconButton>
         </Toolbar>
@@ -185,8 +190,8 @@ const DashboardLayout = () => {
               width: drawerWidth,
               borderRight: 1,
               borderColor: 'divider',
-              bgcolor: 'background.paper'
-            }
+              bgcolor: 'background.paper',
+            },
           }}
         >
           {drawer}
@@ -198,7 +203,7 @@ const DashboardLayout = () => {
         sx={{
           flexGrow: 1,
           p: 3,
-          width: { md: `calc(100% - ${drawerWidth}px)` }
+          width: { md: `calc(100% - ${drawerWidth}px)` },
         }}
       >
         <Toolbar />

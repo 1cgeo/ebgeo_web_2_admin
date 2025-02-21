@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
+// Path: pages\Logs\index.tsx
 import { Box } from '@mui/material';
+
+import React, { useState } from 'react';
+
 import { PageContainer } from '@/components/Layout/PageContainer';
 import { PageHeader } from '@/components/Layout/PageHeader';
-import { LogsTable } from './components/LogsTable';
-import { LogsFilterBar } from './components/LogsFilterBar';
-import { LogDetailsDialog } from './components/LogDetailsDialog';
-import { useLogs } from './hooks/useLogs';
+
 import type { LogEntry } from '@/types/logs';
 
+import { LogDetailsDialog } from './components/LogDetailsDialog';
+import { LogsFilterBar } from './components/LogsFilterBar';
+import { LogsTable } from './components/LogsTable';
+import { useLogs } from './hooks/useLogs';
+
 const LogsPage: React.FC = () => {
-  const {
-    logs,
-    total,
-    loading,
-    filters,
-    handleFilterChange
-  } = useLogs();
+  const { logs, total, loading, filters, handleFilterChange } = useLogs();
 
   const [selectedLog, setSelectedLog] = useState<LogEntry | null>(null);
 
@@ -34,9 +33,9 @@ const LogsPage: React.FC = () => {
         level={filters.level}
         category={filters.category}
         limit={filters.limit || 100}
-        onLevelChange={(level) => handleFilterChange({ level })}
-        onCategoryChange={(category) => handleFilterChange({ category })}
-        onLimitChange={(limit) => handleFilterChange({ limit })}
+        onLevelChange={level => handleFilterChange({ level })}
+        onCategoryChange={category => handleFilterChange({ category })}
+        onLimitChange={limit => handleFilterChange({ limit })}
       />
 
       <Box sx={{ mt: 3 }}>

@@ -1,9 +1,23 @@
-import { useState, useCallback, useEffect } from 'react';
-import { groupsService } from '@/services/groups';
-import { useDebounce } from '@/hooks/useDebounce';
-import type { GroupDetails, GroupListParams, CreateGroupDTO, UpdateGroupDTO } from '@/types/groups';
+// Path: pages\Groups\hooks\useGroups.ts
+import { useCallback, useEffect, useState } from 'react';
 
-type SortableFields = 'name' | 'member_count' | 'created_at' | 'updated_at' | 'model_permissions_count' | 'zone_permissions_count';
+import { useDebounce } from '@/hooks/useDebounce';
+
+import { groupsService } from '@/services/groups';
+import type {
+  CreateGroupDTO,
+  GroupDetails,
+  GroupListParams,
+  UpdateGroupDTO,
+} from '@/types/groups';
+
+type SortableFields =
+  | 'name'
+  | 'member_count'
+  | 'created_at'
+  | 'updated_at'
+  | 'model_permissions_count'
+  | 'zone_permissions_count';
 
 export function useGroups() {
   const [page, setPage] = useState(0);
@@ -30,7 +44,7 @@ export function useGroups() {
         limit: rowsPerPage,
         search: debouncedSearch || undefined,
         sort: sortField,
-        order: sortOrder
+        order: sortOrder,
       };
 
       const response = await groupsService.list(params);
@@ -40,7 +54,7 @@ export function useGroups() {
         created_at: new Date(group.created_at),
         updated_at: new Date(group.updated_at),
         model_permissions_count: Number(group.model_permissions_count),
-        zone_permissions_count: Number(group.zone_permissions_count)
+        zone_permissions_count: Number(group.zone_permissions_count),
       }));
 
       setGroups(formattedGroups);
@@ -61,7 +75,9 @@ export function useGroups() {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -112,6 +128,6 @@ export function useGroups() {
     handleRowsPerPageChange,
     handleSearch,
     handleSort,
-    refetchGroups: fetchGroups
+    refetchGroups: fetchGroups,
   };
 }

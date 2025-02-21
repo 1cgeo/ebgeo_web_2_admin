@@ -1,3 +1,4 @@
+// Path: services\errorHandler.ts
 import { AxiosError } from 'axios';
 import { enqueueSnackbar } from 'notistack';
 
@@ -49,24 +50,22 @@ export class ErrorHandler {
 
   private static handleValidationError(data?: ApiError) {
     if (data?.details) {
-      const messages = Object.values(data.details)
-        .flat()
-        .join(', ');
-      
+      const messages = Object.values(data.details).flat().join(', ');
+
       enqueueSnackbar(messages, {
         variant: 'error',
-        autoHideDuration: 5000
+        autoHideDuration: 5000,
       });
     } else {
       enqueueSnackbar(data?.message || 'Dados inválidos', {
-        variant: 'error'
+        variant: 'error',
       });
     }
   }
 
   private static handleUnauthorizedError() {
     enqueueSnackbar('Sessão expirada. Por favor, faça login novamente.', {
-      variant: 'error'
+      variant: 'error',
     });
     // Redireciona para login se necessário
     window.location.href = '/login';
@@ -74,32 +73,35 @@ export class ErrorHandler {
 
   private static handleForbiddenError() {
     enqueueSnackbar('Você não tem permissão para realizar esta ação.', {
-      variant: 'error'
+      variant: 'error',
     });
   }
 
   private static handleNotFoundError() {
     enqueueSnackbar('O recurso solicitado não foi encontrado.', {
-      variant: 'error'
+      variant: 'error',
     });
   }
 
   private static handleServerError() {
-    enqueueSnackbar('Ocorreu um erro no servidor. Tente novamente mais tarde.', {
-      variant: 'error'
-    });
+    enqueueSnackbar(
+      'Ocorreu um erro no servidor. Tente novamente mais tarde.',
+      {
+        variant: 'error',
+      },
+    );
   }
 
   private static handleUnknownError() {
     enqueueSnackbar('Ocorreu um erro inesperado. Tente novamente.', {
-      variant: 'error'
+      variant: 'error',
     });
   }
 
   private static handleGenericError(error: Error) {
     console.error('Erro não tratado:', error);
     enqueueSnackbar('Ocorreu um erro inesperado.', {
-      variant: 'error'
+      variant: 'error',
     });
   }
 }

@@ -1,6 +1,8 @@
-import React from 'react';
-import { Box, Button, Typography, Container } from '@mui/material';
+// Path: components\Feedback\ErrorBoundary.tsx
 import { ErrorOutline } from '@mui/icons-material';
+import { Box, Button, Container, Typography } from '@mui/material';
+
+import React from 'react';
 
 interface Props {
   children: React.ReactNode;
@@ -53,7 +55,8 @@ export class ErrorBoundary extends React.Component<Props, State> {
               Ops! Algo deu errado
             </Typography>
             <Typography variant="body1" color="text.secondary" paragraph>
-              Ocorreu um erro inesperado na aplicação. Por favor, tente recarregar a página.
+              Ocorreu um erro inesperado na aplicação. Por favor, tente
+              recarregar a página.
             </Typography>
             {this.state.error && (
               <Typography

@@ -1,18 +1,22 @@
-import React from 'react';
-import { Box, IconButton, Chip, Tooltip } from '@mui/material';
+// Path: pages\Users\components\UsersTable.tsx
 import {
-  Edit,
-  Block,
-  Person,
-  Visibility,
   AdminPanelSettings,
-  PersonOff,
   Badge,
-  Business
+  Block,
+  Business,
+  Edit,
+  Person,
+  PersonOff,
+  Visibility,
 } from '@mui/icons-material';
+import { Box, Chip, IconButton, Tooltip } from '@mui/material';
+
+import React from 'react';
+
 import { DataTable } from '@/components/DataDisplay/DataTable';
+import type { Column, DataItem } from '@/components/DataDisplay/DataTable';
+
 import type { User } from '@/types/users';
-import type { DataItem, Column } from '@/components/DataDisplay/DataTable';
 import type { SortableFields } from '@/types/users';
 
 type UserTableItem = User & DataItem;
@@ -46,7 +50,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
   onDelete,
   onViewDetails,
   onPageChange,
-  onRowsPerPageChange
+  onRowsPerPageChange,
 }) => {
   const formatDate = (date: Date | undefined) => {
     if (!date) return '-';
@@ -55,7 +59,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       month: 'short',
       day: '2-digit',
       hour: '2-digit',
-      minute: '2-digit'
+      minute: '2-digit',
     });
   };
 
@@ -74,7 +78,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
     role: 'role',
     isActive: 'is_active',
     lastLogin: 'last_login',
-    groupCount: 'group_count'
+    groupCount: 'group_count',
   };
 
   const columns: Column<UserTableItem>[] = [
@@ -91,41 +95,41 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           )}
           <span>{value as string}</span>
         </Box>
-      )
+      ),
     },
     {
       id: 'nome_guerra',
       label: 'Nome de Guerra',
       sortable: true,
-      format: (value) => (
+      format: value => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Badge fontSize="small" color="action" />
           <span>{(value as string) || '-'}</span>
         </Box>
-      )
+      ),
     },
     {
       id: 'nome_completo',
       label: 'Nome Completo',
       sortable: true,
-      format: (value) => <span>{(value as string) || '-'}</span>
+      format: value => <span>{(value as string) || '-'}</span>,
     },
     {
       id: 'organizacao_militar',
       label: 'OM',
       sortable: true,
-      format: (value) => (
+      format: value => (
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Business fontSize="small" color="action" />
           <span>{(value as string) || '-'}</span>
         </Box>
-      )
+      ),
     },
     {
       id: 'email',
       label: 'Email',
       sortable: true,
-      format: (value) => <span>{value as string}</span>
+      format: value => <span>{value as string}</span>,
     },
     {
       id: 'role',
@@ -139,7 +143,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           color={value === 'admin' ? 'primary' : 'default'}
           variant="outlined"
         />
-      )
+      ),
     },
     {
       id: 'isActive',
@@ -153,13 +157,13 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           color={value ? 'success' : 'error'}
           icon={value ? <Person /> : <PersonOff />}
         />
-      )
+      ),
     },
     {
       id: 'lastLogin',
       label: 'Último Acesso',
       sortable: true,
-      format: value => formatDate(value as Date)
+      format: value => formatDate(value as Date),
     },
     {
       id: 'groupCount',
@@ -172,7 +176,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
           label={value?.toString() || '0'}
           variant="outlined"
         />
-      )
+      ),
     },
     {
       id: 'actions',
@@ -181,18 +185,12 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       format: (_, row) => (
         <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 1 }}>
           <Tooltip title="Visualizar detalhes">
-            <IconButton
-              size="small"
-              onClick={() => onViewDetails(row.id)}
-            >
+            <IconButton size="small" onClick={() => onViewDetails(row.id)}>
               <Visibility fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Editar">
-            <IconButton
-              size="small"
-              onClick={() => onEdit(row.id)}
-            >
+            <IconButton size="small" onClick={() => onEdit(row.id)}>
               <Edit fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -206,8 +204,8 @@ export const UsersTable: React.FC<UsersTableProps> = ({
             </IconButton>
           </Tooltip>
         </Box>
-      )
-    }
+      ),
+    },
   ];
 
   return (
@@ -224,7 +222,7 @@ export const UsersTable: React.FC<UsersTableProps> = ({
       emptyState={{
         title: 'Nenhum usuário encontrado',
         description: 'Crie um novo usuário para começar',
-        icon: <Person sx={{ fontSize: 48 }} />
+        icon: <Person sx={{ fontSize: 48 }} />,
       }}
       onPageChange={onPageChange}
       onRowsPerPageChange={onRowsPerPageChange}

@@ -1,22 +1,38 @@
+// Path: components\Login\LoginForm.tsx
+import {
+  Alert,
+  Box,
+  Button,
+  Card,
+  CardContent,
+  Fade,
+  TextField,
+  Typography,
+  useTheme,
+} from '@mui/material';
+import type { AxiosError } from 'axios';
+
 import React from 'react';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, TextField, Button, Alert, Typography, useTheme, Fade } from '@mui/material';
-import { useAuth } from '@/context/AuthContext';
-import { authService, NetworkError } from '@/services/auth';
-import { CSPError } from '@/services/api';
-import { useForm } from '@/hooks/useForm';
-import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+
 import { LoadingDot } from '@/components/Animations/LoadingDot';
 import { PageTransition } from '@/components/Animations/PageTransition';
-import type { AxiosError } from 'axios';
+
+import { useAuth } from '@/context/AuthContext';
+
+import { useForm } from '@/hooks/useForm';
+import { useHapticFeedback } from '@/hooks/useHapticFeedback';
+
+import { CSPError } from '@/services/api';
 import { handleAuthError } from '@/services/api';
+import { NetworkError, authService } from '@/services/auth';
 
 type LoginFormFields = {
   username: string;
   password: string;
   submit: string;
-}
+};
 
 interface ApiErrorResponse {
   message: string;
@@ -24,41 +40,40 @@ interface ApiErrorResponse {
 }
 
 const errorMessages: Record<string, string> = {
-  TIMEOUT: 'Tempo de conexão esgotado. Verifique sua conexão e tente novamente.',
+  TIMEOUT:
+    'Tempo de conexão esgotado. Verifique sua conexão e tente novamente.',
   DNS: 'Não foi possível conectar ao servidor. Verifique sua conexão com a internet.',
   SSL: 'Erro de segurança na conexão. Verifique se a data/hora do seu sistema estão corretas.',
-  NETWORK: 'Servidor temporariamente indisponível. Tente novamente em alguns instantes.',
+  NETWORK:
+    'Servidor temporariamente indisponível. Tente novamente em alguns instantes.',
   AUTH: 'Usuário ou senha inválidos',
   CSP: 'Erro de segurança detectado na página. Entre em contato com o suporte.',
-  RATE_LIMIT: 'Muitas tentativas de login. Aguarde alguns minutos antes de tentar novamente.',
+  RATE_LIMIT:
+    'Muitas tentativas de login. Aguarde alguns minutos antes de tentar novamente.',
   MAINTENANCE: 'Sistema em manutenção. Tente novamente mais tarde.',
-  DEFAULT: 'Ocorreu um erro inesperado. Tente novamente.'
+  DEFAULT: 'Ocorreu um erro inesperado. Tente novamente.',
 };
 
 export const LoginForm = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const { login } = useAuth();
-  const { buttonPressVibration, successVibration, errorVibration } = useHapticFeedback();
+  const { buttonPressVibration, successVibration, errorVibration } =
+    useHapticFeedback();
   const [loginSuccess, setLoginSuccess] = React.useState(false);
   const isDarkMode = theme.palette.mode === 'dark';
 
-  const {
-    values,
-    errors,
-    isSubmitting,
-    handleChange,
-    setErrors
-  } = useForm<LoginFormFields>({
-    initialValues: {
-      username: '',
-      password: '',
-      submit: ''
-    },
-    onSubmit: async () => {
-      // Empty because we're handling submit manually
-    }
-  });
+  const { values, errors, isSubmitting, handleChange, setErrors } =
+    useForm<LoginFormFields>({
+      initialValues: {
+        username: '',
+        password: '',
+        submit: '',
+      },
+      onSubmit: async () => {
+        // Empty because we're handling submit manually
+      },
+    });
 
   const validateForm = () => {
     const errors: Partial<LoginFormFields> = {};
@@ -70,7 +85,8 @@ export const LoginForm = () => {
     } else if (values.username.length > 50) {
       errors.username = 'Usuário deve ter no máximo 50 caracteres';
     } else if (!/^[a-zA-Z0-9._]+$/.test(values.username)) {
-      errors.username = 'Usuário deve conter apenas letras, números, pontos e underlines';
+      errors.username =
+        'Usuário deve conter apenas letras, números, pontos e underlines';
     } else if (values.username.trim() !== values.username) {
       errors.username = 'Usuário não pode começar ou terminar com espaços';
     }
@@ -102,7 +118,7 @@ export const LoginForm = () => {
     try {
       const response = await authService.login({
         username: values.username,
-        password: values.password
+        password: values.password,
       });
 
       if (response.user.role !== 'admin') {
@@ -136,7 +152,7 @@ export const LoginForm = () => {
       }
     }
   };
-  
+
   useEffect(() => {
     const errorMessage = handleAuthError(navigate);
     if (errorMessage) {
@@ -150,23 +166,25 @@ export const LoginForm = () => {
         sx={{
           width: '100%',
           maxWidth: '400px',
-          backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.8)' : 'rgba(255, 255, 255, 0.8)',
+          backgroundColor: isDarkMode
+            ? 'rgba(0, 0, 0, 0.8)'
+            : 'rgba(255, 255, 255, 0.8)',
           backdropFilter: 'blur(10px)',
           transform: loginSuccess ? 'scale(0.95) translateY(-20px)' : 'none',
           opacity: loginSuccess ? 0 : 1,
-          transition: theme => theme.transitions.create(
-            ['opacity', 'transform', 'background-color'],
-            { duration: theme.transitions.duration.standard }
-          ),
+          transition: theme =>
+            theme.transitions.create(
+              ['opacity', 'transform', 'background-color'],
+              { duration: theme.transitions.duration.standard },
+            ),
           boxShadow: _ => `0 0 20px rgba(0,0,0,0.3), 
           0 0 40px rgba(0,0,0,0.1), 
           0 0 80px rgba(0,0,0,0.1)`,
-          border: _ => `1px solid ${
-            isDarkMode 
-              ? 'rgba(255, 255, 255, 0.2)'
-              : 'rgba(0, 0, 0, 0.2)'
-          }`,
-          borderRadius: 2
+          border: _ =>
+            `1px solid ${
+              isDarkMode ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.2)'
+            }`,
+          borderRadius: 2,
         }}
       >
         <CardContent sx={{ p: 3 }}>
@@ -180,7 +198,11 @@ export const LoginForm = () => {
                     style={{ height: 64, width: 'auto' }}
                   />
                 </Box>
-                <Typography variant="h5" component="h1" sx={{ mb: 1, fontWeight: 'bold' }}>
+                <Typography
+                  variant="h5"
+                  component="h1"
+                  sx={{ mb: 1, fontWeight: 'bold' }}
+                >
                   Sistema de Administração
                 </Typography>
                 <Typography variant="body2" color="text.secondary">
@@ -240,8 +262,8 @@ export const LoginForm = () => {
                     py: 1.5,
                     position: 'relative',
                     '&:active': {
-                      transform: 'scale(0.98)'
-                    }
+                      transform: 'scale(0.98)',
+                    },
                   }}
                 >
                   {isSubmitting ? <LoadingDot /> : 'Entrar'}
@@ -254,5 +276,3 @@ export const LoginForm = () => {
     </PageTransition>
   );
 };
-
-export default LoginForm;

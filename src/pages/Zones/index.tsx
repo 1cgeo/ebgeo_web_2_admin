@@ -1,16 +1,25 @@
-import React from 'react';
+// Path: pages\Zones\index.tsx
 import { Box, Button } from '@mui/material';
+import type { AxiosError } from 'axios';
 import { useSnackbar } from 'notistack';
+
+import React from 'react';
+
 import { PageContainer } from '@/components/Layout/PageContainer';
 import { PageHeader } from '@/components/Layout/PageHeader';
-import { ZonesTable } from './components/ZonesTable';
-import { ZoneDialog } from './components/ZoneDialog';
-import { ZoneDetailsDialog } from './components/ZoneDetailsDialog';
+
+import type {
+  ZoneFormData,
+  ZonePermissions,
+  ZoneWithStats,
+} from '@/types/geographic';
+
 import { DeleteZoneDialog } from './components/DeleteZoneDialog';
+import { ZoneDetailsDialog } from './components/ZoneDetailsDialog';
+import { ZoneDialog } from './components/ZoneDialog';
 import { ZonesFilterBar } from './components/ZonesFilterBar';
+import { ZonesTable } from './components/ZonesTable';
 import { useZones } from './hooks/useZones';
-import type { ZoneFormData, ZoneWithStats, ZonePermissions } from '@/types/geographic';
-import type { AxiosError } from 'axios';
 
 interface ApiErrorResponse {
   status?: number;
@@ -20,11 +29,16 @@ const ZonesPage: React.FC = () => {
   const [dialogOpen, setDialogOpen] = React.useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = React.useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
-  const [selectedZoneId, setSelectedZoneId] = React.useState<string | null>(null);
-  const [selectedZone, setSelectedZone] = React.useState<ZoneWithStats | null>(null);
-  const [selectedPermissions, setSelectedPermissions] = React.useState<ZonePermissions | null>(null);
+  const [selectedZoneId, setSelectedZoneId] = React.useState<string | null>(
+    null,
+  );
+  const [selectedZone, setSelectedZone] = React.useState<ZoneWithStats | null>(
+    null,
+  );
+  const [selectedPermissions, setSelectedPermissions] =
+    React.useState<ZonePermissions | null>(null);
   const { enqueueSnackbar } = useSnackbar();
-  
+
   const {
     zones,
     totalCount,
@@ -42,7 +56,7 @@ const ZonesPage: React.FC = () => {
     handleRowsPerPageChange,
     handleSearch,
     handleSort,
-    refetchZones
+    refetchZones,
   } = useZones();
 
   const handleCreate = () => {
@@ -64,13 +78,15 @@ const ZonesPage: React.FC = () => {
     try {
       const [zoneDetails, permissions] = await Promise.all([
         getZoneDetails(id),
-        getZonePermissions(id)
+        getZonePermissions(id),
       ]);
       setSelectedZone(zoneDetails);
       setSelectedPermissions(permissions);
       setDetailsDialogOpen(true);
     } catch {
-      enqueueSnackbar('Erro ao carregar detalhes da zona', { variant: 'error' });
+      enqueueSnackbar('Erro ao carregar detalhes da zona', {
+        variant: 'error',
+      });
     }
   };
 
@@ -79,17 +95,21 @@ const ZonesPage: React.FC = () => {
       const geomData = JSON.parse(data.geom);
       const zoneData = {
         ...data,
-        geom: geomData
+        geom: geomData,
       };
 
       await createZone(zoneData);
-      enqueueSnackbar('Zona geográfica criada com sucesso', { variant: 'success' });
+      enqueueSnackbar('Zona geográfica criada com sucesso', {
+        variant: 'success',
+      });
       setDialogOpen(false);
       await refetchZones();
     } catch (error) {
       const axiosError = error as AxiosError<ApiErrorResponse>;
       if (axiosError.response?.status === 409) {
-        enqueueSnackbar('Já existe uma zona com este nome', { variant: 'error' });
+        enqueueSnackbar('Já existe uma zona com este nome', {
+          variant: 'error',
+        });
       } else {
         enqueueSnackbar('Erro ao salvar zona', { variant: 'error' });
       }
@@ -98,7 +118,7 @@ const ZonesPage: React.FC = () => {
 
   const handleConfirmDelete = async () => {
     if (!selectedZoneId) return;
-    
+
     try {
       await deleteZone(selectedZoneId);
       enqueueSnackbar('Zona removida com sucesso', { variant: 'success' });
@@ -115,20 +135,13 @@ const ZonesPage: React.FC = () => {
         title="Zonas Geográficas"
         subtitle="Gerencie as zonas geográficas do sistema"
         actions={
-          <Button
-            variant="contained"
-            onClick={handleCreate}
-            disabled={loading}
-          >
+          <Button variant="contained" onClick={handleCreate} disabled={loading}>
             Nova Zona
           </Button>
         }
       />
 
-      <ZonesFilterBar
-        search={search}
-        onSearch={handleSearch}
-      />
+      <ZonesFilterBar search={search} onSearch={handleSearch} />
 
       <Box sx={{ mt: 3 }}>
         <ZonesTable

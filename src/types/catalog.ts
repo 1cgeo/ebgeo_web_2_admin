@@ -1,4 +1,4 @@
-// Enums - não usar 'type' na importação
+// Path: types\catalog.ts
 export enum ModelAccessLevel {
   PUBLIC = 'public',
   PRIVATE = 'private',

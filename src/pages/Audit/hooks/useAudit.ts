@@ -1,19 +1,25 @@
-import { useState, useCallback, useEffect } from 'react';
-import { auditService } from '@/services/audit';
+// Path: pages\Audit\hooks\useAudit.ts
+import { useCallback, useEffect, useState } from 'react';
+
 import { useDebounce } from '@/hooks/useDebounce';
-import type { AuditEntry, AuditFilters, AuditAction } from '@/types/audit';
+
+import { auditService } from '@/services/audit';
+import type { AuditAction, AuditEntry, AuditFilters } from '@/types/audit';
 
 export function useAudit() {
   const [entries, setEntries] = useState<AuditEntry[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  
+
   // Filtros
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [search, setSearch] = useState('');
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
   const [selectedAction, setSelectedAction] = useState<AuditAction | ''>('');
   const [selectedActorId, setSelectedActorId] = useState<string>('');
 
@@ -22,7 +28,7 @@ export function useAudit() {
   const fetchAuditEntries = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const filters: AuditFilters = {
         page: page + 1,
         limit: rowsPerPage,
@@ -30,7 +36,7 @@ export function useAudit() {
         action: selectedAction || undefined,
         actorId: selectedActorId || undefined,
         startDate: dateRange[0]?.toISOString(),
-        endDate: dateRange[1]?.toISOString()
+        endDate: dateRange[1]?.toISOString(),
       };
 
       const response = await auditService.query(filters);
@@ -49,7 +55,7 @@ export function useAudit() {
     debouncedSearch,
     selectedAction,
     selectedActorId,
-    dateRange
+    dateRange,
   ]);
 
   useEffect(() => {
@@ -60,7 +66,9 @@ export function useAudit() {
     setPage(newPage);
   };
 
-  const handleRowsPerPageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRowsPerPageChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
@@ -111,6 +119,6 @@ export function useAudit() {
     handleActionChange,
     handleActorChange,
     clearFilters,
-    refetch: fetchAuditEntries
+    refetch: fetchAuditEntries,
   };
 }
